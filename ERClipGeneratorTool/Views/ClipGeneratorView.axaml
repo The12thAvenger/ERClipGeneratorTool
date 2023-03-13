@@ -1,0 +1,68 @@
+﻿<reactiveUi:ReactiveUserControl x:TypeArguments="viewModels:ClipGeneratorViewModel"
+                                xmlns="https://github.com/avaloniaui"
+                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                xmlns:reactiveUi="http://reactiveui.net"
+                                xmlns:viewModels="clr-namespace:ERClipGeneratorTool.ViewModels"
+                                xmlns:controls="clr-namespace:ERClipGeneratorTool.Controls"
+                                xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                                mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                                x:Class="ERClipGeneratorTool.Views.ClipGeneratorView">
+    <Design.DataContext>
+        <viewModels:ClipGeneratorViewModel />
+    </Design.DataContext>
+
+    <Grid Margin="10" RowDefinitions="30, 30, 30, Auto, 30, 30, 30, 30, 30, 30, 30" ColumnDefinitions="*, *">
+        <TextBlock Text="Name" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" />
+        <TextBox Text="{Binding Name}" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="0" />
+        <TextBlock Text="Animation Name" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" />
+        <controls:CommitTextBox x:TypeArguments="system:String" Name="AnimationName"
+                                CommittedValue="{Binding AnimationName}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="1" />
+        <TextBlock Text="Mode" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" />
+        <ComboBox Items="{Binding PlaybackModes}" SelectedItem="{Binding Mode}" Grid.Column="1" Grid.Row="2" />
+        <Expander Header="Flags" Grid.Column="0" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0, 5"
+                  Grid.Row="3">
+            <StackPanel>
+                <CheckBox Content="Continue Motion At End" IsChecked="{Binding ContinueMotionAtEnd}" Margin="0, 5" />
+                <CheckBox Content="Sync Half Cycle In Ping Pong Mode" IsChecked="{Binding SyncHalfCycleInPingPongMode}"
+                          Margin="0, 5" />
+                <CheckBox Content="Mirror" IsChecked="{Binding Mirror}" Margin="0, 5" />
+                <CheckBox Content="Force Dense Pose" IsChecked="{Binding ForceDensePose}" Margin="0, 5" />
+                <CheckBox Content="Don't Convert Annotations To Triggers"
+                          IsChecked="{Binding DontConvertAnnotationsToTriggers}" Margin="0, 5" />
+                <CheckBox Content="Ignore Motion" IsChecked="{Binding IgnoreMotion}" Margin="0, 5" />
+            </StackPanel>
+        </Expander>
+        <TextBlock Text="Playback Speed" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding PlaybackSpeed}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="4" />
+        <TextBlock Text="Start Time" VerticalAlignment="Center" Grid.Column="0" Grid.Row="5" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding StartTime}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="5" />
+        <TextBlock Text="Crop Start Local Time" VerticalAlignment="Center" Grid.Column="0" Grid.Row="6" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding CropStart}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="6" />
+        <TextBlock Text="Crop End Local Time" VerticalAlignment="Center" Grid.Column="0" Grid.Row="7" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding CropEnd}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="7" />
+        <TextBlock Text="Enforced Duration" VerticalAlignment="Center" Grid.Column="0" Grid.Row="8" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding EnforcedDuration}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="8" />
+        <TextBlock Text="User Controlled Time Fraction" VerticalAlignment="Center" Grid.Column="0" Grid.Row="9" />
+        <controls:CommitTextBox x:TypeArguments="system:Single" CommittedValue="{Binding UserControlledTimeFraction}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="9" />
+        <TextBlock Text="User Partition Mask" VerticalAlignment="Center" Grid.Column="0" Grid.Row="10" />
+        <controls:CommitTextBox x:TypeArguments="system:UInt32" CommittedValue="{Binding UserPartitionMask}"
+                                VerticalContentAlignment="Center"
+                                Grid.Column="1" Grid.Row="10" />
+    </Grid>
+</reactiveUi:ReactiveUserControl>

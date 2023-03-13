@@ -1,0 +1,33 @@
+﻿<reactiveUi:ReactiveWindow x:TypeArguments="viewModels:ClipGeneratorOptionsViewModel"
+                           xmlns="https://github.com/avaloniaui"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                           xmlns:viewModels="clr-namespace:ERClipGeneratorTool.ViewModels"
+                           xmlns:reactiveUi="http://reactiveui.net"
+                           mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                           x:Class="ERClipGeneratorTool.Views.ClipGeneratorOptionsView"
+                           WindowStartupLocation="CenterOwner"
+                           MaxHeight="100"
+                           MaxWidth="300"
+                           MinHeight="100"
+                           MinWidth="300">
+    <!-- ExtendClientAreaToDecorationsHint="True" -->
+    <!-- ExtendClientAreaChromeHints="PreferSystemChrome" -->
+    <!-- ExtendClientAreaTitleBarHeightHint="-1" -->
+
+    <Design.DataContext>
+        <viewModels:ClipGeneratorOptionsViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="40, 40" Margin="5">
+        <Grid ColumnDefinitions="*, *" Grid.Row="0" Margin="5">
+            <TextBlock IsHitTestVisible="False" Text="Animation Name:" VerticalAlignment="Center" Grid.Column="0" />
+            <TextBox Text="{Binding AnimationName}" VerticalContentAlignment="Center" Grid.Column="1" />
+        </Grid>
+        <Grid ColumnDefinitions="*, *" Grid.Row="1" Margin="5">
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="0, 0, 2, 0" Grid.Column="0" />
+            <Button Content="Ok" Command="{Binding ConfirmCommand}" Margin="2, 0, 0, 0" Grid.Column="1" />
+        </Grid>
+    </Grid>
+</reactiveUi:ReactiveWindow>

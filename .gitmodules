@@ -1,0 +1,3 @@
+[submodule "HKLib"]
+	path = HKLib
+	url = https://github.com/The12thAvenger/HKLib

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="ERClipGeneratorTool/App.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/BehaviorGraphView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/ClipGeneratorOptionsView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/ClipGeneratorView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/MainWindow.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

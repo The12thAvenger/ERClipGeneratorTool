@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERClipGeneratorTool", "ERClipGeneratorTool\ERClipGeneratorTool.csproj", "{8605A44C-70E7-4075-A389-DCAB1790083F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HKLib.Serialization", "HKLib\HKLib.Serialization\HKLib.Serialization.csproj", "{2A51814F-B16D-4A38-B34C-D267C3C8EC3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HKLib.Reflection", "HKLib\HKLib.Reflection\HKLib.Reflection.csproj", "{3235F696-BA2B-45B7-8A1D-13D7C17D30EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HKLib", "HKLib\HKLib\HKLib.csproj", "{D1B809E4-1844-45CB-849D-A355A2806C03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8605A44C-70E7-4075-A389-DCAB1790083F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8605A44C-70E7-4075-A389-DCAB1790083F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8605A44C-70E7-4075-A389-DCAB1790083F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8605A44C-70E7-4075-A389-DCAB1790083F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A51814F-B16D-4A38-B34C-D267C3C8EC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A51814F-B16D-4A38-B34C-D267C3C8EC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A51814F-B16D-4A38-B34C-D267C3C8EC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A51814F-B16D-4A38-B34C-D267C3C8EC3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3235F696-BA2B-45B7-8A1D-13D7C17D30EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3235F696-BA2B-45B7-8A1D-13D7C17D30EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3235F696-BA2B-45B7-8A1D-13D7C17D30EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3235F696-BA2B-45B7-8A1D-13D7C17D30EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1B809E4-1844-45CB-849D-A355A2806C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B809E4-1844-45CB-849D-A355A2806C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B809E4-1844-45CB-849D-A355A2806C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B809E4-1844-45CB-849D-A355A2806C03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

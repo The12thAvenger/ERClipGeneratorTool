@@ -1,0 +1,67 @@
+<rxui:ReactiveWindow xmlns="https://github.com/avaloniaui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:vm="using:ERClipGeneratorTool.ViewModels"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:rxui="http://reactiveui.net"
+                     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                     x:Class="ERClipGeneratorTool.Views.MainWindow"
+                     x:TypeArguments="vm:MainWindowViewModel"
+                     Icon="/Assets/hct.ico"
+                     Title="ERClipGeneratorTool"
+                     CanResize="True"
+                     MinWidth="400"
+                     MinHeight="100"
+                     Width="900"
+                     Height="600"
+                     WindowStartupLocation="CenterScreen"
+                     ExtendClientAreaToDecorationsHint="True"
+                     ExtendClientAreaChromeHints="PreferSystemChrome"
+                     ExtendClientAreaTitleBarHeightHint="-1"
+                     Background="{DynamicResource ThemeControlMidColor}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Menu > MenuItem">
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Width" Value="40" />
+        </Style>
+        <Style Selector="Menu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="MenuItem:selected /template/ Border#root">
+            <Setter Property="Background" Value="{DynamicResource ThemeControlMidBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeControlMidBrush}" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto, *">
+        <DockPanel Background="{DynamicResource ThemeControlLowColor}" IsHitTestVisible="False" />
+        <Grid ColumnDefinitions="Auto, *" Grid.Row="0">
+            <Menu Height="30" Grid.Column="0">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open..." HotKey="Ctrl+O" Command="{Binding OpenFileCommand}" />
+                    <MenuItem Header="_Save" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
+                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <MenuItem Header="Save As..." HotKey="Ctrl+Alt+S" Command="{Binding SaveFileAsCommand}"
+                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                </MenuItem>
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="_Undo" HotKey="Ctrl+Z" Command="{Binding UndoCommand}" />
+                    <MenuItem Header="_Redo" HotKey="Ctrl+Shift+Z" Command="{Binding RedoCommand}" />
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <TextBlock Text="ERClipGeneratorTool" IsHitTestVisible="False" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Grid.Row="0" />
+        <ContentControl Content="{Binding BehaviorGraph}"
+                        BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+                        BorderThickness="{DynamicResource ThemeBorderThickness}"
+                        Grid.Row="1" />
+    </Grid>
+
+</rxui:ReactiveWindow>
