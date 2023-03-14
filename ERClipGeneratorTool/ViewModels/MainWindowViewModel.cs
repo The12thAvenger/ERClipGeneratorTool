@@ -95,6 +95,14 @@ public class MainWindowViewModel : ViewModelBase
                 continue;
             }
 
+            if (!objects.Any(x => x is hkbClipGenerator))
+            {
+                await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+                    "The selected file does not contain any hkbClipGenerators.",
+                    MessageBoxOptions.MessageBoxMode.Ok));
+                continue;
+            }
+
             History = new StackHistory();
             BehaviorGraph = new BehaviorGraphViewModel(behaviorGraph, objects, History)
             {
