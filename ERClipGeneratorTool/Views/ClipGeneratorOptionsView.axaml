@@ -26,8 +26,8 @@
             <TextBox Text="{Binding AnimationName}" VerticalContentAlignment="Center" Grid.Column="1" />
         </Grid>
         <Grid ColumnDefinitions="*, *" Grid.Row="1" Margin="5">
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="0, 0, 2, 0" Grid.Column="0" />
-            <Button Content="Ok" Command="{Binding ConfirmCommand}" Margin="2, 0, 0, 0" Grid.Column="1" />
+            <Button Content="Cancel" Command="{Binding CancelCommand}" HotKey="Escape" Margin="0, 0, 2, 0" Grid.Column="0" />
+            <Button Content="Ok" Command="{Binding ConfirmCommand}" HotKey="Enter" Margin="2, 0, 0, 0" Grid.Column="1" />
         </Grid>
     </Grid>
 </reactiveUi:ReactiveWindow>

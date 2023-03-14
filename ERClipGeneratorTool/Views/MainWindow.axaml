@@ -47,7 +47,7 @@
                     <MenuItem Header="_Open..." HotKey="Ctrl+O" Command="{Binding OpenFileCommand}" />
                     <MenuItem Header="_Save" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <MenuItem Header="Save As..." HotKey="Ctrl+Alt+S" Command="{Binding SaveFileAsCommand}"
+                    <MenuItem Header="Save As..." HotKey="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 </MenuItem>
                 <MenuItem Header="_Edit">
