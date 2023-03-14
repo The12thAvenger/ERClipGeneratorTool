@@ -1,3 +1,6 @@
 [submodule "HKLib"]
 	path = HKLib
 	url = https://github.com/The12thAvenger/HKLib
+[submodule "SoulsAssetPipeline"]
+	path = SoulsAssetPipeline
+	url = https://github.com/Meowmaritus/SoulsAssetPipeline/
