@@ -9,7 +9,6 @@
         <LangVersion>11</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models" />
         <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
@@ -35,6 +34,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\HKLib\HKLib.Serialization\HKLib.Serialization.csproj" />
+      <ProjectReference Include="..\SoulsFormats\SoulsFormats\SoulsFormats.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="Avalonia.Themes.Simple">
