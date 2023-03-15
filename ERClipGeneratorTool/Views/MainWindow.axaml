@@ -27,7 +27,7 @@
     <Window.Styles>
         <Style Selector="Menu > MenuItem">
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="Width" Value="40" />
+            <Setter Property="Width" Value="60" />
         </Style>
         <Style Selector="Menu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -44,15 +44,18 @@
         <Grid ColumnDefinitions="Auto, *" Grid.Row="0">
             <Menu Height="30" Grid.Column="0">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open..." HotKey="Ctrl+O" Command="{Binding OpenFileCommand}" />
-                    <MenuItem Header="_Save" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
+                    <MenuItem Header="_Open..." InputGesture="Ctrl+O" HotKey="Ctrl+O"
+                              Command="{Binding OpenFileCommand}"/>
+                    <MenuItem Header="_Save" InputGesture="Ctrl+S" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <MenuItem Header="Save As..." HotKey="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}"
+                    <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" HotKey="Ctrl+Shift+S"
+                              Command="{Binding SaveFileAsCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Undo" HotKey="Ctrl+Z" Command="{Binding UndoCommand}" />
-                    <MenuItem Header="_Redo" HotKey="Ctrl+Shift+Z" Command="{Binding RedoCommand}" />
+                    <MenuItem Header="_Undo" InputGesture="Ctrl+Z" HotKey="Ctrl+Z" Command="{Binding UndoCommand}" />
+                    <MenuItem Header="_Redo" InputGesture="Ctrl+Shift+Z" HotKey="Ctrl+Shift+Z"
+                              Command="{Binding RedoCommand}" />
                 </MenuItem>
             </Menu>
         </Grid>
