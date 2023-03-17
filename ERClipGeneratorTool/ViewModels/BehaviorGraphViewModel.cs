@@ -21,10 +21,10 @@ public class BehaviorGraphViewModel : ViewModelBase
     private ClipGeneratorViewModel? _currentClipGenerator;
     private short _nextAnimationInternalId;
 
-    public BehaviorGraphViewModel(hkbBehaviorGraph behaviorGraph, List<IHavokObject> objects, IHistory history)
+    public BehaviorGraphViewModel(hkRootLevelContainer rootLevelContainer, List<IHavokObject> objects, IHistory history)
     {
         _history = history;
-        BehaviorGraph = behaviorGraph;
+        RootLevelContainer = rootLevelContainer;
         List<CustomManualSelectorGenerator> cmsgs = objects
             .Where(x => x is CustomManualSelectorGenerator cmsg
                         && cmsg.m_generators.Count > 0
@@ -52,11 +52,11 @@ public class BehaviorGraphViewModel : ViewModelBase
             }
         }
 
-        ClipGenerators = new SourceCache<ClipGeneratorViewModel, short>(x => x.AnimationInternalId);
+        ClipGenerators = new SourceCache<ClipGeneratorViewModel, string>(x => x.Name);
         ClipGenerators.AddOrUpdate(clipParents.Select(x => new ClipGeneratorViewModel(x.Key, x.Value, _history)));
 
 
-        _nextAnimationInternalId = ClipGenerators.Keys.Max();
+        _nextAnimationInternalId = ClipGenerators.Items.Select(x => x.AnimationInternalId).Max();
         _nextAnimationInternalId++;
 
         _cmsgsByAnimId = cmsgs.GroupBy(x => x.m_animId).ToDictionary(x => x.Key, x => x.ToList());
@@ -85,8 +85,10 @@ public class BehaviorGraphViewModel : ViewModelBase
     [Reactive] public string Filter { get; set; } = "";
 
     public string? Path { get; set; }
-    public hkbBehaviorGraph BehaviorGraph { get; }
-    public SourceCache<ClipGeneratorViewModel, short> ClipGenerators { get; }
+
+    public hkRootLevelContainer RootLevelContainer { get; }
+
+    public SourceCache<ClipGeneratorViewModel, string> ClipGenerators { get; }
 
     public ObservableCollectionExtended<ClipGeneratorViewModel> FilteredGenerators { get; }
 

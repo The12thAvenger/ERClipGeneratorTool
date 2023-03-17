@@ -10,7 +10,7 @@ public class FilePathOptions
         Save
     }
 
-    public FilePathOptions(string prompt, FilePathMode mode, List<FileTypeFilter> filters)
+    public FilePathOptions(string prompt, FilePathMode mode, List<Filter> filters)
     {
         Prompt = prompt;
         Mode = mode;
@@ -20,7 +20,7 @@ public class FilePathOptions
     public string Prompt { get; init; }
     public FilePathMode Mode { get; init; }
 
-    public List<FileTypeFilter> Filters { get; init; }
+    public List<Filter> Filters { get; init; }
 
-    public record FileTypeFilter(string Name, List<string> Extensions);
+    public record Filter(string Name, List<string> Extensions);
 }

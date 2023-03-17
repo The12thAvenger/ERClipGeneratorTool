@@ -21,7 +21,7 @@
                      VerticalAlignment="Stretch">
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="viewModels:ClipGeneratorViewModel">
-                        <TextBlock Text="{Binding AnimationName}" />
+                        <TextBlock Text="{Binding Name}" />
                     </DataTemplate>
                 </ListBox.DataTemplates>
             </ListBox>

@@ -20,6 +20,7 @@
         <controls:CommitTextBox x:TypeArguments="system:String" Name="AnimationName"
                                 CommittedValue="{Binding AnimationName}"
                                 VerticalContentAlignment="Center"
+                                IsEnabled="False"
                                 Grid.Column="1" Grid.Row="1" />
         <TextBlock Text="Mode" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" />
         <ComboBox Items="{Binding PlaybackModes}" SelectedItem="{Binding Mode}" Grid.Column="1" Grid.Row="2" />

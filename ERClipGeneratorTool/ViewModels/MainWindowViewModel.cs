@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -11,6 +12,7 @@ using HKLib.Serialization.hk2018.Binary;
 using ReactiveHistory;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using SoulsFormats;
 
 namespace ERClipGeneratorTool.ViewModels;
 
@@ -51,10 +53,11 @@ public class MainWindowViewModel : ViewModelBase
 
     private async Task OpenFileAsync()
     {
-        List<FilePathOptions.FileTypeFilter> filters = new()
+        List<FilePathOptions.Filter> filters = new()
         {
-            new FilePathOptions.FileTypeFilter("Havok Binary Packfiles", new List<string> { "hkx" }),
-            new FilePathOptions.FileTypeFilter("All Files", new List<string> { "*" })
+            // new FilePathOptions.Filter("Elden Ring Behbnds", new List<string> { "behbnd*" }),
+            new FilePathOptions.Filter("Havok Binary Packfiles", new List<string> { "hkx" }),
+            new FilePathOptions.Filter("All Files", new List<string> { "*" })
         };
 
         FilePathOptions options = new("Open Behavior File", FilePathOptions.FilePathMode.Open, filters);
@@ -64,6 +67,17 @@ public class MainWindowViewModel : ViewModelBase
         {
             string? path = await GetFilePath.Handle(options);
             if (path is null) return;
+
+            if (path.EndsWith(".behbnd.dcx") || path.EndsWith(".behbnd"))
+            {
+                if (!BND4.IsRead(path, out BND4 bnd))
+                {
+                    await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+                        "The selected file is not a valid behbnd.",
+                        MessageBoxOptions.MessageBoxMode.Ok));
+                    continue;
+                }
+            }
 
             List<IHavokObject> objects;
             try
@@ -87,7 +101,7 @@ public class MainWindowViewModel : ViewModelBase
             }
 
             if (rootLevelContainer.m_namedVariants.Count == 0 ||
-                rootLevelContainer.m_namedVariants[0].m_variant is not hkbBehaviorGraph behaviorGraph)
+                rootLevelContainer.m_namedVariants[0].m_variant is not hkbBehaviorGraph)
             {
                 await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                     "The selected file does not contain an hkbBehaviorGraph.",
@@ -104,33 +118,31 @@ public class MainWindowViewModel : ViewModelBase
             }
 
             History = new StackHistory();
-            BehaviorGraph = new BehaviorGraphViewModel(behaviorGraph, objects, History)
+            BehaviorGraph = new BehaviorGraphViewModel(rootLevelContainer, objects, History)
             {
-                Path = path
+                Path = path,
             };
             break;
         }
     }
 
+    private List<IHavokObject> GetFileFromBnd(BND4 bnd)
+    {
+        throw new NotImplementedException();
+    }
+
     private void SaveFile()
     {
         HavokBinarySerializer serializer = new();
-        hkRootLevelContainer rootLevelContainer = new();
-        rootLevelContainer.m_namedVariants.Add(new hkRootLevelContainer.NamedVariant()
-        {
-            m_name = "hkbBehaviorGraph",
-            m_className = "hkbBehaviorGraph",
-            m_variant = BehaviorGraph!.BehaviorGraph
-        });
-        serializer.Write(rootLevelContainer, BehaviorGraph.Path!);
+        serializer.Write(BehaviorGraph!.RootLevelContainer, BehaviorGraph.Path!);
     }
 
     private async Task SaveFileAsAsync()
     {
-        List<FilePathOptions.FileTypeFilter> filters = new()
+        List<FilePathOptions.Filter> filters = new()
         {
-            new FilePathOptions.FileTypeFilter("Havok Binary Packfiles", new List<string> { "hkx" }),
-            new FilePathOptions.FileTypeFilter("All Files", new List<string> { "*" })
+            new FilePathOptions.Filter("Havok Binary Packfiles", new List<string> { "hkx" }),
+            new FilePathOptions.Filter("All Files", new List<string> { "*" })
         };
 
         FilePathOptions options = new("Save File As...", FilePathOptions.FilePathMode.Save, filters);
