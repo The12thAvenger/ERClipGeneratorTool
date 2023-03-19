@@ -22,12 +22,23 @@ public partial class BehaviorGraphView : ReactiveUserControl<BehaviorGraphViewMo
         {
             ViewModel!.ShowMessageBox.RegisterHandler(ShowMessageBoxAsync).DisposeWith(d);
             ViewModel!.GetClipGeneratorOptions.RegisterHandler(GetClipGeneratorOptionsAsync).DisposeWith(d);
+            ViewModel!.GetClipGeneratorDupeOptions.RegisterHandler(GetClipGeneratorDupeOptionsAsync).DisposeWith(d);
         });
     }
 
     private async Task GetClipGeneratorOptionsAsync(InteractionContext<ClipGeneratorOptionsViewModel, bool> interaction)
     {
         ClipGeneratorOptionsView view = new()
+        {
+            DataContext = interaction.Input
+        };
+
+        interaction.SetOutput(await view.ShowDialog<bool>(this.FindAncestorOfType<Window>()!));
+    }
+
+    private async Task GetClipGeneratorDupeOptionsAsync(InteractionContext<ClipGeneratorDupeViewModel, bool> interaction)
+    {
+        ClipGeneratorDupeView view = new()
         {
             DataContext = interaction.Input
         };

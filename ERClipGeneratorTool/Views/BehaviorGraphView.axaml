@@ -18,7 +18,14 @@
                      SelectedItem="{Binding CurrentClipGenerator}"
                      AutoScrollToSelectedItem="True"
                      Grid.Row="1"
-                     VerticalAlignment="Stretch">
+                     VerticalAlignment="Stretch"
+                     SelectionMode="Multiple"
+                     SelectedItems="{Binding SelectedClipGenerators}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding DuplicateAsync}" Header="Duplicate To"></MenuItem>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
                 <ListBox.DataTemplates>
                     <DataTemplate DataType="viewModels:ClipGeneratorViewModel">
                         <TextBlock Text="{Binding Name}" />
