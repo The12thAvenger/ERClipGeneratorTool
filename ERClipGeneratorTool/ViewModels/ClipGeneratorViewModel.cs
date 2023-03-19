@@ -308,13 +308,13 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
             "Invalid animation name format. The animation name must correspond to a valid TAE Id.");
     }
 
-    public static ValidationResult? ValidateOffsets(string? offsetsString)
+    public static ValidationResult? ValidateTaeIds(string? taeIdsString)
     {
-        if (offsetsString is null) return new ValidationResult("At least one offset value must be specified.");
-        bool isValid = DupeExtensions.GetTaeIdsFromString(offsetsString).Count > 0;
+        if (taeIdsString is null) return new ValidationResult("At least one TAE ID must be specified.");
+        bool isValid = DupeExtensions.GetTaeIdsFromString(taeIdsString).Count > 0;
         if (isValid) return ValidationResult.Success;
         return new ValidationResult(
-            "Invalid offset values. All offsets specified must be positive integer values.");
+            "Invalid TAE ID values. All TAE IDs must be positive integer values.");
     }
 
     [GeneratedRegex("^a[0-9]{3}_[0-9]{6}$")]

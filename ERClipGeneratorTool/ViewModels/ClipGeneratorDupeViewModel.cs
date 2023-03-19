@@ -12,13 +12,13 @@ public class ClipGeneratorDupeViewModel : ViewModelBase
     public ClipGeneratorDupeViewModel()
     {
         IObservable<bool> isValid = this.WhenAnyValue(x => x.TaeIds).Select(x =>
-            ClipGeneratorViewModel.ValidateOffsets(x) == ValidationResult.Success);
+            ClipGeneratorViewModel.ValidateTaeIds(x) == ValidationResult.Success);
         ConfirmCommand = ReactiveCommand.Create(() => true, isValid);
         CancelCommand = ReactiveCommand.Create(() => false);
     }
 
     [Reactive]
-    [CustomValidation(typeof(ClipGeneratorViewModel), nameof(ClipGeneratorViewModel.ValidateOffsets))]
+    [CustomValidation(typeof(ClipGeneratorViewModel), nameof(ClipGeneratorViewModel.ValidateTaeIds))]
     public string TaeIds { get; set; } = "0";
 
     public ReactiveCommand<Unit, bool> ConfirmCommand { get; }
