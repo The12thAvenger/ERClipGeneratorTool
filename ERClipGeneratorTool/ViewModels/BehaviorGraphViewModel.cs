@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DynamicData;
 using DynamicData.Binding;
+using ERClipGeneratorTool.Util;
 using ERClipGeneratorTool.ViewModels.Interactions;
 using HKLib.hk2018;
 using ReactiveHistory;
@@ -82,6 +84,8 @@ public class BehaviorGraphViewModel : ViewModelBase
         DeleteCommand = ReactiveCommand.Create(DeleteCurrentGenerator, isGeneratorSelected);
     }
 
+    public ObservableCollection<ClipGeneratorViewModel> SelectedClipGenerators { get; } = new();
+
     [Reactive] public string Filter { get; set; } = "";
 
     public string? Path { get; set; }
@@ -116,35 +120,78 @@ public class BehaviorGraphViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
 
     public Interaction<ClipGeneratorOptionsViewModel, bool> GetClipGeneratorOptions { get; } = new();
+    public Interaction<ClipGeneratorDupeViewModel, bool> GetClipGeneratorDupeOptions { get; } = new();
+
+    public async Task DuplicateClipGeneratorAsync(ClipGeneratorViewModel scg, int taeId)
+    {
+        string taeSectionId = taeId.ToString().PadLeft(3, '0');
+        string newName = scg.Name[..1] + taeSectionId + scg.Name[4..];
+        string newAnimationName = scg.AnimationName[..1] + taeSectionId + scg.AnimationName[4..];
+        if (await DoesGeneratorExist(newAnimationName, false)) return;
+        hkbClipGenerator selectedGenerator = scg.DuplicateInternal();
+        selectedGenerator.m_name = newName;
+        selectedGenerator.m_animationName = newAnimationName;
+        selectedGenerator.m_animationInternalId = _nextAnimationInternalId;
+        AddGeneratorWithHistory(selectedGenerator, scg.Parents.ToList());
+    }
+
+    public async Task DuplicateAsync()
+    {
+        ClipGeneratorDupeViewModel dupeDialog = new();
+        bool proceed = await GetClipGeneratorDupeOptions.Handle(dupeDialog);
+        if (!proceed) return;
+        List<int> taeIds = DupeExtensions.GetTaeIdsFromString(dupeDialog.TaeIds);
+        List<ClipGeneratorViewModel> selectedClipGenerators = SelectedClipGenerators.ToList();
+        foreach (ClipGeneratorViewModel scg in selectedClipGenerators)
+        {
+            foreach (int id in taeIds)
+                await DuplicateClipGeneratorAsync(scg, id);
+        }
+    }
+
+    public List<CustomManualSelectorGenerator> GetCMSGsByAnimId(int animId)
+    {
+        _cmsgsByAnimId.TryGetValue(animId, out List<CustomManualSelectorGenerator>? cmsgs);
+        return cmsgs ?? new List<CustomManualSelectorGenerator>(0);
+    }
+
+    public async Task<bool> DoesGeneratorExist(string animationName, bool showDialogs = true)
+    {
+        int animId = int.Parse(animationName.Split("_")[1]);
+        List<CustomManualSelectorGenerator> cmsgs = GetCMSGsByAnimId(animId);
+        if (cmsgs.Count == 0)
+        {
+            if (showDialogs)
+            {
+                await ShowMessageBox.Handle(new MessageBoxOptions("Invalid Animation Name",
+                    "No suitable CustomManualSelectorGenerators were found for the given animation name.",
+                    MessageBoxOptions.MessageBoxMode.Ok));
+            }
+            return true;
+        }
+        foreach (CustomManualSelectorGenerator cmsg in cmsgs)
+        {
+            if (!cmsg.m_generators.Any(x => x is hkbClipGenerator clipGenerator
+                    && clipGenerator.m_animationName == animationName)) continue;
+            if (showDialogs)
+            {
+                await ShowMessageBox.Handle(
+                    new MessageBoxOptions("Invalid Animation Name",
+                        "A clip generator with this animation name has already been added to the behavior graph.",
+                        MessageBoxOptions.MessageBoxMode.Ok));
+            }
+            return true;
+        }
+        return false;
+    }
 
     public async Task NewGeneratorAsync()
     {
         ClipGeneratorOptionsViewModel options = new();
         bool proceed = await GetClipGeneratorOptions.Handle(options);
         if (!proceed) return;
-
         int animId = int.Parse(options.AnimationName.Split("_")[1]);
-        if (!_cmsgsByAnimId.TryGetValue(animId, out List<CustomManualSelectorGenerator>? cmsgs))
-        {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Invalid Animation Name",
-                "No suitable CustomManualSelectorGenerators were found for the given animation name.",
-                MessageBoxOptions.MessageBoxMode.Ok));
-            return;
-        }
-
-        foreach (CustomManualSelectorGenerator cmsg in cmsgs)
-        {
-            if (cmsg.m_generators.Any(x => x is hkbClipGenerator clipGenerator
-                                           && clipGenerator.m_animationName == options.AnimationName))
-            {
-                await ShowMessageBox.Handle(
-                    new MessageBoxOptions("Invalid Animation Name",
-                        "A clip generator with this animation name has already been added to the behavior graph.",
-                        MessageBoxOptions.MessageBoxMode.Ok));
-                return;
-            }
-        }
-
+        if (await DoesGeneratorExist(options.AnimationName)) return;
         hkbClipGenerator clipGenerator = new()
         {
             m_propertyBag = new hkPropertyBag(),
@@ -164,7 +211,7 @@ public class BehaviorGraphViewModel : ViewModelBase
             m_flags = 0,
             m_animationInternalId = _nextAnimationInternalId
         };
-        AddGeneratorWithHistory(clipGenerator, cmsgs);
+        AddGeneratorWithHistory(clipGenerator, GetCMSGsByAnimId(animId));
     }
 
     public void AddGeneratorWithHistory(hkbClipGenerator clipGenerator, List<CustomManualSelectorGenerator> parents)

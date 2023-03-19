@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Text.RegularExpressions;
+using ERClipGeneratorTool.Util;
 using HKLib.hk2018;
 using ReactiveHistory;
 using ReactiveUI;
-using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
@@ -24,13 +26,10 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         _clipGenerator = clipGenerator;
         _history = history;
         _parents = parents;
-
         Activator = new ViewModelActivator();
-
         this.WhenActivated(d =>
         {
             DeleteCommand = ReactiveCommand.Create(Delete).DisposeWith(d);
-
             this.WhenAnyValue(x => x.Name)
                 .ObserveWithHistory(value => Name = value ?? "", clipGenerator.m_name, history);
             this.WhenAnyValue(x => x.AnimationName).ObserveWithHistory(value => AnimationName = value ?? "",
@@ -146,7 +145,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         hkbClipGenerator.PlaybackMode.MODE_LOOPING,
         hkbClipGenerator.PlaybackMode.MODE_USER_CONTROLLED,
         hkbClipGenerator.PlaybackMode.MODE_PING_PONG,
-        hkbClipGenerator.PlaybackMode.MODE_COUNT,
+        hkbClipGenerator.PlaybackMode.MODE_COUNT
     };
 
     public hkbClipGenerator.ClipFlags Flags
@@ -237,7 +236,6 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         {
             parent.m_generators.Remove(_clipGenerator);
         }
-
         _parents.Clear();
     }
 
@@ -248,6 +246,30 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
             cmsg.m_generators.Add(_clipGenerator);
             _parents.Add(cmsg);
         }
+    }
+
+    public hkbClipGenerator DuplicateInternal()
+    {
+        hkbClipGenerator copy = new()
+        {
+            m_propertyBag = new hkPropertyBag(),
+            m_variableBindingSet = _clipGenerator.m_variableBindingSet,
+            m_userData = _clipGenerator.m_userData,
+            m_name = _clipGenerator.m_name,
+            m_animationName = _clipGenerator.m_animationName,
+            m_triggers = _clipGenerator.m_triggers,
+            m_userPartitionMask = _clipGenerator.m_userPartitionMask,
+            m_cropStartAmountLocalTime = _clipGenerator.m_cropStartAmountLocalTime,
+            m_cropEndAmountLocalTime = _clipGenerator.m_cropEndAmountLocalTime,
+            m_startTime = _clipGenerator.m_startTime,
+            m_playbackSpeed = _clipGenerator.m_playbackSpeed,
+            m_enforcedDuration = _clipGenerator.m_enforcedDuration,
+            m_userControlledTimeFraction = _clipGenerator.m_userControlledTimeFraction,
+            m_mode = _clipGenerator.m_mode,
+            m_flags = _clipGenerator.m_flags,
+            m_animationInternalId = _clipGenerator.m_animationInternalId
+        };
+        return copy;
     }
 
     public ClipGeneratorViewModel Duplicate()
@@ -271,7 +293,6 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
             m_flags = _clipGenerator.m_flags,
             m_animationInternalId = _clipGenerator.m_animationInternalId
         };
-
         return new ClipGeneratorViewModel(copy, new List<CustomManualSelectorGenerator>(), _history);
     }
 
@@ -283,9 +304,17 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         {
             return ValidationResult.Success;
         }
-
         return new ValidationResult(
             "Invalid animation name format. The animation name must correspond to a valid TAE Id.");
+    }
+
+    public static ValidationResult? ValidateTaeIds(string? taeIdsString)
+    {
+        if (taeIdsString is null) return new ValidationResult("At least one TAE ID must be specified.");
+        bool isValid = DupeExtensions.GetTaeIdsFromString(taeIdsString).Count > 0;
+        if (isValid) return ValidationResult.Success;
+        return new ValidationResult(
+            "Invalid TAE ID values. All TAE IDs must be positive integer values.");
     }
 
     [GeneratedRegex("^a[0-9]{3}_[0-9]{6}$")]
