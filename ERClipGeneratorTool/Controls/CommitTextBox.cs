@@ -20,7 +20,7 @@ public class CommitTextBox<T> : TextBox, IStyleable
     /// </summary>
     public static readonly DirectProperty<CommitTextBox<T>, T?> CommittedValueProperty =
         AvaloniaProperty.RegisterDirect<CommitTextBox<T>, T?>(
-            nameof(CommittedValue), o => o.CommittedValue, (o, v) => o.CommittedValue = v);
+            nameof(CommittedValue), o => o.CommittedValue, (o, v) => o.CommittedValue = v, defaultBindingMode: BindingMode.TwoWay);
 
     private T? _committedValue;
 
