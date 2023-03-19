@@ -11,7 +11,8 @@
                            MaxHeight="100"
                            MaxWidth="300"
                            MinHeight="100"
-                           MinWidth="300">
+                           MinWidth="300"
+                           Icon="/Assets/hct.ico">
     <!-- ExtendClientAreaToDecorationsHint="True" -->
     <!-- ExtendClientAreaChromeHints="PreferSystemChrome" -->
     <!-- ExtendClientAreaTitleBarHeightHint="-1" -->
