@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reactive;
@@ -274,25 +273,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
 
     public ClipGeneratorViewModel Duplicate()
     {
-        hkbClipGenerator copy = new()
-        {
-            m_propertyBag = new hkPropertyBag(),
-            m_variableBindingSet = _clipGenerator.m_variableBindingSet,
-            m_userData = _clipGenerator.m_userData,
-            m_name = _clipGenerator.m_name,
-            m_animationName = _clipGenerator.m_animationName,
-            m_triggers = _clipGenerator.m_triggers,
-            m_userPartitionMask = _clipGenerator.m_userPartitionMask,
-            m_cropStartAmountLocalTime = _clipGenerator.m_cropStartAmountLocalTime,
-            m_cropEndAmountLocalTime = _clipGenerator.m_cropEndAmountLocalTime,
-            m_startTime = _clipGenerator.m_startTime,
-            m_playbackSpeed = _clipGenerator.m_playbackSpeed,
-            m_enforcedDuration = _clipGenerator.m_enforcedDuration,
-            m_userControlledTimeFraction = _clipGenerator.m_userControlledTimeFraction,
-            m_mode = _clipGenerator.m_mode,
-            m_flags = _clipGenerator.m_flags,
-            m_animationInternalId = _clipGenerator.m_animationInternalId
-        };
+        hkbClipGenerator copy = DuplicateInternal();
         return new ClipGeneratorViewModel(copy, new List<CustomManualSelectorGenerator>(), _history);
     }
 
@@ -311,10 +292,11 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
     public static ValidationResult? ValidateTaeIds(string? taeIdsString)
     {
         if (taeIdsString is null) return new ValidationResult("At least one TAE ID must be specified.");
-        bool isValid = DupeExtensions.GetTaeIdsFromString(taeIdsString).Count > 0;
+        List<int> taeIdsFromString = DupeExtensions.GetTaeIdsFromString(taeIdsString);
+        bool isValid = taeIdsFromString.Count > 0 && taeIdsFromString.All(x => x is >= 0 and <= 999);
         if (isValid) return ValidationResult.Success;
         return new ValidationResult(
-            "Invalid TAE ID values. All TAE IDs must be positive integer values.");
+            "Invalid TAE ID values. All TAE IDs must be integer values between 0 and 999.");
     }
 
     [GeneratedRegex("^a[0-9]{3}_[0-9]{6}$")]
