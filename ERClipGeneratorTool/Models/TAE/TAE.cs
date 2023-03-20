@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using SoulsFormats;
 
+// ReSharper disable All
+#nullable disable
+
 namespace ERClipGeneratorTool.Models.TAE;
 
 // Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
@@ -111,7 +114,7 @@ public partial class TAE : SoulsFile<TAE>
     /// <summary>
     /// Gets the current bank being used in the currently applied template, if a template is applied.
     /// </summary>
-    public TAE.Template.BankTemplate BankTemplate => AppliedTemplate?[EventBank];
+    public Template.BankTemplate BankTemplate => AppliedTemplate?[EventBank];
 
     /// <summary>
     /// Applies a template to this TAE for easier editing.

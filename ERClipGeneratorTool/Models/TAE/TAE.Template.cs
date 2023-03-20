@@ -4,10 +4,13 @@ using System.Linq;
 using System.Xml;
 using SoulsFormats;
 
-// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
 
 namespace ERClipGeneratorTool.Models.TAE;
 
+// ReSharper disable All
+#nullable disable
+
+// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
 public partial class TAE
 {
     /// <summary>
@@ -251,7 +254,7 @@ public partial class TAE
             /// (Optional) The default value to set when creating a new event of
             /// this type from scratch. Otherwise a 0 value will be used in such a case.
             /// </summary>
-            public object DefaultValue = null;
+            public object DefaultValue;
 
             /// <summary>
             /// The name of this parameter.
@@ -262,7 +265,7 @@ public partial class TAE
             /// The name of the group this parameter is in.
             /// Leave null to place outside of any groups.
             /// </summary>
-            public string NameGroup = null;
+            public string NameGroup;
 
             /// <summary>
             /// The value type of this parameter.
@@ -272,7 +275,7 @@ public partial class TAE
             /// <summary>
             /// (Optional) The value which should be asserted on this parameter.
             /// </summary>
-            public object ValueToAssert = null;
+            public object ValueToAssert;
 
             internal ParameterTemplate(long bankId, long eventId, long paramIndex, XmlNode paramNode, int offset)
             {
@@ -374,7 +377,7 @@ public partial class TAE
             /// <summary>
             /// Possible values if this is an enum, otherwise it's null.
             /// </summary>
-            public Dictionary<string, object> EnumEntries { get; private set; } = null;
+            public Dictionary<string, object> EnumEntries { get; private set; }
 
             /// <summary>
             /// Gets the byte count of a specific value type.
@@ -679,7 +682,6 @@ public partial class TAE
                         break;
                     case ParamType.f32grad:
                         br.Position += 8;
-                        break;
                         break;
                     case ParamType.f64:
                         br.Position += 8;

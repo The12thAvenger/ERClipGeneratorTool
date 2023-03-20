@@ -6,8 +6,10 @@ using SoulsFormats;
 
 namespace ERClipGeneratorTool.Models.TAE;
 
-// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
+// ReSharper disable All
+#nullable disable
 
+// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
 public partial class TAE : SoulsFile<ERClipGeneratorTool.Models.TAE.TAE>
 {
     /// <summary>
@@ -303,7 +305,7 @@ public partial class TAE : SoulsFile<ERClipGeneratorTool.Models.TAE.TAE>
         /// <summary>
         /// The mini-header of this animation entry.
         /// </summary>
-        public AnimMiniHeader MiniHeader { get; set; } = null;
+        public AnimMiniHeader MiniHeader { get; set; }
 
         /// <summary>
         /// Unknown.

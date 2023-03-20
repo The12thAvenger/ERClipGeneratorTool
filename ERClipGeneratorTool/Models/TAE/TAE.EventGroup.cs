@@ -5,8 +5,10 @@ using SoulsFormats;
 
 namespace ERClipGeneratorTool.Models.TAE;
 
-// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
+// ReSharper disable All
+#nullable disable
 
+// Taken from SoulsAssetPipeline by Meowmaritus (https://github.com/Meowmaritus/SoulsAssetPipeline/)
 public partial class TAE : SoulsFile<ERClipGeneratorTool.Models.TAE.TAE>
 {
     /// <summary>
