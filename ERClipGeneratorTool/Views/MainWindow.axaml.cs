@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
 using ERClipGeneratorTool.ViewModels;
 using ERClipGeneratorTool.ViewModels.Interactions;
 using MessageBox.Avalonia;
@@ -22,8 +26,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         this.WhenActivated(d =>
         {
-            ViewModel!.GetFilePath.RegisterHandler(GetFilePathAsync).DisposeWith(d);
+            ViewModel!.GetFileSource.RegisterHandler(GetFilePathAsync).DisposeWith(d);
             ViewModel!.ShowMessageBox.RegisterHandler(ShowMessageBoxAsync).DisposeWith(d);
+            ViewModel!.GetBndFileName.RegisterHandler(GetBndFileNameAsync).DisposeWith(d);
         });
     }
 
@@ -31,63 +36,70 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         InteractionContext<MessageBoxOptions, MessageBoxOptions.MessageBoxResult> interaction)
     {
         MessageBoxOptions options = interaction.Input;
+        interaction.SetOutput(await ShowMessageBoxAsync(options));
+    }
+
+    private async Task<MessageBoxOptions.MessageBoxResult> ShowMessageBoxAsync(MessageBoxOptions options)
+    {
         ButtonEnum mode = (ButtonEnum)options.Mode;
         IMsBoxWindow<ButtonResult> messageBox =
-            MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams()
+            MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams
             {
                 ButtonDefinitions = mode,
                 CanResize = false,
                 ContentTitle = options.Header,
                 ContentMessage = options.Message,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                SystemDecorations = SystemDecorations.BorderOnly,
             });
 
         ButtonResult result = await messageBox.Show(this);
-        interaction.SetOutput((MessageBoxOptions.MessageBoxResult)result);
+        return (MessageBoxOptions.MessageBoxResult)result;
     }
 
-    private async Task GetFilePathAsync(InteractionContext<FilePathOptions, string?> interaction)
+    private async Task GetFilePathAsync(InteractionContext<FilePathOptions, FileSource?> interaction)
     {
         string? path;
         switch (interaction.Input.Mode)
         {
             case FilePathOptions.FilePathMode.Open:
             {
-                OpenFileDialog openFileDialog = new()
+                FilePickerOpenOptions openOptions = new()
                 {
                     Title = interaction.Input.Prompt,
-                    Filters = interaction.Input.Filters
-                        .Select(x => new FileDialogFilter { Name = x.Name, Extensions = x.Extensions }).ToList(),
+                    FileTypeFilter = interaction.Input.Filters
+                        .Select(x => new FilePickerFileType(x.Name) { Patterns = x.Extensions }).ToList(),
                     AllowMultiple = false
                 };
 
-                string[]? paths = await openFileDialog.ShowAsync(this);
-                if (paths is null || paths.Length == 0)
-                {
-                    path = null;
-                }
-                else
-                {
-                    path = paths[0];
-                }
-
+                IReadOnlyList<IStorageFile> openFiles = await StorageProvider.OpenFilePickerAsync(openOptions);
+                path = openFiles.Count == 0 ? null : openFiles[0].Path.LocalPath;
                 break;
             }
             case FilePathOptions.FilePathMode.Save:
-                SaveFileDialog saveFileDialog = new()
+                FilePickerSaveOptions saveOptions = new()
                 {
                     Title = interaction.Input.Prompt,
-                    Filters = interaction.Input.Filters
-                        .Select(x => new FileDialogFilter { Name = x.Name, Extensions = x.Extensions }).ToList()
+                    FileTypeChoices = interaction.Input.Filters
+                        .Select(x => new FilePickerFileType(x.Name) { Patterns = x.Extensions }).ToList()
                 };
 
-                path = await saveFileDialog.ShowAsync(this);
+                IStorageFile? saveFile = await StorageProvider.SaveFilePickerAsync(saveOptions);
+                path = saveFile?.Path.LocalPath;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(interaction));
         }
 
-        interaction.SetOutput(path);
+        interaction.SetOutput(path is null ? null : new FileSource(path));
+    }
+
+    private async Task GetBndFileNameAsync(InteractionContext<BndOpenViewModel, string?> interaction)
+    {
+        BndOpenView view = new()
+        {
+            DataContext = interaction.Input
+        };
+
+        interaction.SetOutput(await view.ShowDialog<string?>(this));
     }
 }

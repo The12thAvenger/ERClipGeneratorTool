@@ -13,6 +13,9 @@
         <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <None Update="Settings.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
@@ -31,6 +34,7 @@
         <PackageReference Include="ReactiveHistory" Version="0.10.7" />
         <PackageReference Include="ReactiveProperty" Version="9.0.0" />
         <PackageReference Include="ReactiveUI.Fody" Version="18.4.26" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
     </ItemGroup>
     <ItemGroup>
@@ -41,5 +45,15 @@
       <Reference Include="Avalonia.Themes.Simple">
         <HintPath>..\..\..\.nuget\packages\avalonia.themes.simple\11.0.0-preview5\lib\net6.0\Avalonia.Themes.Simple.dll</HintPath>
       </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\AnibndImportView.axaml.cs">
+        <DependentUpon>AnibndImportView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\BndOpenView.axaml.cs">
+        <DependentUpon>BndOpenView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

@@ -235,6 +235,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         {
             parent.m_generators.Remove(_clipGenerator);
         }
+
         _parents.Clear();
     }
 
@@ -277,6 +278,30 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         return new ClipGeneratorViewModel(copy, new List<CustomManualSelectorGenerator>(), _history);
     }
 
+
+    public static hkbClipGenerator GetDefaultClipGenerator(string animationName)
+    {
+        return new hkbClipGenerator
+        {
+            m_propertyBag = new hkPropertyBag(),
+            m_variableBindingSet = null,
+            m_userData = 0,
+            m_name = animationName,
+            m_animationName = animationName,
+            m_triggers = null,
+            m_userPartitionMask = 0,
+            m_cropStartAmountLocalTime = 0,
+            m_cropEndAmountLocalTime = 0,
+            m_startTime = 0,
+            m_playbackSpeed = 1,
+            m_enforcedDuration = 0,
+            m_userControlledTimeFraction = 0,
+            m_mode = hkbClipGenerator.PlaybackMode.MODE_SINGLE_PLAY,
+            m_flags = 0,
+            m_animationInternalId = 0 // must be set by the caller
+        };
+    }
+
     public static ValidationResult? ValidateAnimationName(string? animationName)
     {
         if (animationName is null) return new ValidationResult("Animation name cannot be empty.");
@@ -285,6 +310,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         {
             return ValidationResult.Success;
         }
+
         return new ValidationResult(
             "Invalid animation name format. The animation name must correspond to a valid TAE Id.");
     }

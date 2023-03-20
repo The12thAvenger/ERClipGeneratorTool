@@ -7,12 +7,14 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DynamicData;
 using DynamicData.Binding;
+using ERClipGeneratorTool.Models.TAE;
 using ERClipGeneratorTool.Util;
 using ERClipGeneratorTool.ViewModels.Interactions;
 using HKLib.hk2018;
 using ReactiveHistory;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using SoulsFormats;
 
 namespace ERClipGeneratorTool.ViewModels;
 
@@ -23,10 +25,13 @@ public class BehaviorGraphViewModel : ViewModelBase
     private ClipGeneratorViewModel? _currentClipGenerator;
     private short _nextAnimationInternalId;
 
-    public BehaviorGraphViewModel(hkRootLevelContainer rootLevelContainer, List<IHavokObject> objects, IHistory history)
+    public BehaviorGraphViewModel(hkRootLevelContainer rootLevelContainer, List<IHavokObject> objects, IHistory history,
+        FileSource fileSource)
     {
         _history = history;
+        FileSource = fileSource;
         RootLevelContainer = rootLevelContainer;
+
         List<CustomManualSelectorGenerator> cmsgs = objects
             .Where(x => x is CustomManualSelectorGenerator cmsg
                         && cmsg.m_generators.Count > 0
@@ -70,12 +75,9 @@ public class BehaviorGraphViewModel : ViewModelBase
         FilteredGenerators = new ObservableCollectionExtended<ClipGeneratorViewModel>();
         ClipGenerators.Connect()
             .Filter(generatorsFilter)
-            .SortBy(x => x.AnimationName, sortOptimisations: SortOptimisations.IgnoreEvaluates)
+            .SortBy(x => x.Name, sortOptimisations: SortOptimisations.IgnoreEvaluates)
             .Bind(FilteredGenerators)
             .Subscribe();
-
-        // this.WhenAnyValue(x => x.CurrentClipGenerator)
-        //     .ObserveWithHistory(value => CurrentClipGenerator = value, null, _history);
 
         NewGeneratorCommand = ReactiveCommand.CreateFromTask(NewGeneratorAsync);
 
@@ -88,7 +90,7 @@ public class BehaviorGraphViewModel : ViewModelBase
 
     [Reactive] public string Filter { get; set; } = "";
 
-    public string? Path { get; set; }
+    public FileSource FileSource { get; set; }
 
     public hkRootLevelContainer RootLevelContainer { get; }
 
@@ -121,17 +123,17 @@ public class BehaviorGraphViewModel : ViewModelBase
 
     public Interaction<ClipGeneratorOptionsViewModel, bool> GetClipGeneratorOptions { get; } = new();
     public Interaction<ClipGeneratorDupeViewModel, bool> GetClipGeneratorDupeOptions { get; } = new();
+    public Interaction<AnibndImportViewModel, List<string>> ChooseAnimationsFromAnibnd { get; } = new();
 
     public async Task DuplicateClipGeneratorAsync(ClipGeneratorViewModel scg, int taeId)
     {
-        string taeSectionId = taeId.ToString().PadLeft(3, '0');
+        string taeSectionId = taeId.ToString("D3");
         string newName = scg.Name[..1] + taeSectionId + scg.Name[4..];
         string newAnimationName = scg.AnimationName[..1] + taeSectionId + scg.AnimationName[4..];
         if (await DoesGeneratorExist(newAnimationName, false)) return;
         hkbClipGenerator selectedGenerator = scg.DuplicateInternal();
         selectedGenerator.m_name = newName;
         selectedGenerator.m_animationName = newAnimationName;
-        selectedGenerator.m_animationInternalId = _nextAnimationInternalId;
         AddGeneratorWithHistory(selectedGenerator, scg.Parents.ToList());
     }
 
@@ -167,12 +169,14 @@ public class BehaviorGraphViewModel : ViewModelBase
                     "No suitable CustomManualSelectorGenerators were found for the given animation name.",
                     MessageBoxOptions.MessageBoxMode.Ok));
             }
+
             return true;
         }
+
         foreach (CustomManualSelectorGenerator cmsg in cmsgs)
         {
             if (!cmsg.m_generators.Any(x => x is hkbClipGenerator clipGenerator
-                    && clipGenerator.m_animationName == animationName)) continue;
+                                            && clipGenerator.m_animationName == animationName)) continue;
             if (showDialogs)
             {
                 await ShowMessageBox.Handle(
@@ -180,8 +184,10 @@ public class BehaviorGraphViewModel : ViewModelBase
                         "A clip generator with this animation name has already been added to the behavior graph.",
                         MessageBoxOptions.MessageBoxMode.Ok));
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -190,34 +196,22 @@ public class BehaviorGraphViewModel : ViewModelBase
         ClipGeneratorOptionsViewModel options = new();
         bool proceed = await GetClipGeneratorOptions.Handle(options);
         if (!proceed) return;
-        int animId = int.Parse(options.AnimationName.Split("_")[1]);
-        if (await DoesGeneratorExist(options.AnimationName)) return;
-        hkbClipGenerator clipGenerator = new()
-        {
-            m_propertyBag = new hkPropertyBag(),
-            m_variableBindingSet = null,
-            m_userData = 0,
-            m_name = options.AnimationName,
-            m_animationName = options.AnimationName,
-            m_triggers = null,
-            m_userPartitionMask = 0,
-            m_cropStartAmountLocalTime = 0,
-            m_cropEndAmountLocalTime = 0,
-            m_startTime = 0,
-            m_playbackSpeed = 1,
-            m_enforcedDuration = 0,
-            m_userControlledTimeFraction = 0,
-            m_mode = hkbClipGenerator.PlaybackMode.MODE_SINGLE_PLAY,
-            m_flags = 0,
-            m_animationInternalId = _nextAnimationInternalId
-        };
+        await NewGeneratorAsync(options.AnimationName);
+    }
+
+    public async Task NewGeneratorAsync(string animationName)
+    {
+        int animId = int.Parse(animationName.Split("_")[1]);
+        if (await DoesGeneratorExist(animationName)) return;
+        hkbClipGenerator clipGenerator = ClipGeneratorViewModel.GetDefaultClipGenerator(animationName);
         AddGeneratorWithHistory(clipGenerator, GetCMSGsByAnimId(animId));
     }
 
     public void AddGeneratorWithHistory(hkbClipGenerator clipGenerator, List<CustomManualSelectorGenerator> parents)
     {
-        ClipGeneratorViewModel viewModel = new(clipGenerator, new List<CustomManualSelectorGenerator>(), _history);
         short nextAnimationInternalId = _nextAnimationInternalId;
+        clipGenerator.m_animationInternalId = nextAnimationInternalId;
+        ClipGeneratorViewModel viewModel = new(clipGenerator, new List<CustomManualSelectorGenerator>(), _history);
         _history.Snapshot(Undo, Redo);
         Redo();
 
@@ -263,5 +257,43 @@ public class BehaviorGraphViewModel : ViewModelBase
             ClipGenerators.AddOrUpdate(viewModel);
             CurrentClipGeneratorInternal = viewModel;
         }
+    }
+
+    public async Task ImportFromAnibndAsync(BND4 anibnd)
+    {
+        List<string> newAnimNames = GetNewAnimationNamesFromAnibnd(anibnd);
+        if (newAnimNames.Count == 0)
+        {
+            await ShowMessageBox.Handle(new MessageBoxOptions("Import canceled",
+                "The selected anibnd does not contain any unregistered animations.",
+                MessageBoxOptions.MessageBoxMode.Ok));
+            return;
+        }
+
+        AnibndImportViewModel anibndImportViewModel = new(newAnimNames);
+
+        List<string> animNames = await ChooseAnimationsFromAnibnd.Handle(anibndImportViewModel);
+        foreach (string animName in animNames)
+        {
+            await NewGeneratorAsync(animName);
+        }
+    }
+
+    public List<string> GetNewAnimationNamesFromAnibnd(BND4 anibnd)
+    {
+        HashSet<string> existingGenerators = ClipGenerators.Items.Select(x => x.AnimationName.ToString()).ToHashSet();
+        HashSet<string> ignoredGenerators = Settings.Current.IgnoredAnimationNames.ToHashSet();
+        List<string> newAnimationNames = new();
+        foreach (BinderFile taeFile in anibnd.Files.Where(x => x.ID is >= 5000000 and < 6000000))
+        {
+            int taeId = taeFile.ID - 5000000;
+            if (!TAE.IsRead(taeFile.Bytes, out TAE tae)) continue;
+            newAnimationNames.AddRange(tae.Animations
+                .Where(x => _cmsgsByAnimId.ContainsKey((int)x.ID))
+                .Select(x => "a" + taeId.ToString("D3") + "_" + x.ID.ToString("D6"))
+                .Where(x => !existingGenerators.Contains(x) && !ignoredGenerators.Contains(x)));
+        }
+
+        return newAnimationNames;
     }
 }

@@ -13,9 +13,6 @@
                            MinHeight="100"
                            MinWidth="300"
                            Icon="/Assets/hct.ico">
-    <!-- ExtendClientAreaToDecorationsHint="True" -->
-    <!-- ExtendClientAreaChromeHints="PreferSystemChrome" -->
-    <!-- ExtendClientAreaTitleBarHeightHint="-1" -->
 
     <Design.DataContext>
         <viewModels:ClipGeneratorOptionsViewModel />
@@ -27,7 +24,8 @@
             <TextBox Text="{Binding AnimationName}" VerticalContentAlignment="Center" Grid.Column="1" />
         </Grid>
         <Grid ColumnDefinitions="*, *" Grid.Row="1" Margin="5">
-            <Button Content="Cancel" Command="{Binding CancelCommand}" HotKey="Escape" Margin="0, 0, 2, 0" Grid.Column="0" />
+            <Button Content="Cancel" Command="{Binding CancelCommand}" HotKey="Escape" Margin="0, 0, 2, 0"
+                    Grid.Column="0" />
             <Button Content="Ok" Command="{Binding ConfirmCommand}" HotKey="Enter" Margin="2, 0, 0, 0" Grid.Column="1" />
         </Grid>
     </Grid>

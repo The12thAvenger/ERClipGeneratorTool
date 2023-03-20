@@ -4,10 +4,14 @@
     <option name="projectPerEditor">
       <map>
         <entry key="ERClipGeneratorTool/App.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/AnibndImportView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/BehaviorGraphView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/BndOpenView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/ClipGeneratorDupeView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/ClipGeneratorOptionsView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/ClipGeneratorView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/MainWindow.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/ProgressBarView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
       </map>
     </option>
   </component>

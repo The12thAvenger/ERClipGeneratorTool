@@ -27,7 +27,7 @@
     <Window.Styles>
         <Style Selector="Menu > MenuItem">
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="Width" Value="60" />
+            <Setter Property="Width" Value="50" />
         </Style>
         <Style Selector="Menu > MenuItem /template/ ContentPresenter#PART_HeaderPresenter">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -45,7 +45,20 @@
             <Menu Height="30" Grid.Column="0">
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open..." InputGesture="Ctrl+O" HotKey="Ctrl+O"
-                              Command="{Binding OpenFileCommand}"/>
+                              Command="{Binding OpenFileCommand}" />
+                    <MenuItem Header="Open _Recent" Items="{Binding RecentFiles}" IsEnabled="{Binding HasRecentFiles}">
+                        <MenuItem.Styles>
+                            <Style Selector="MenuItem">
+                                <Setter Property="Header" Value="{Binding DisplayPath}" />
+                                <Setter Property="Command"
+                                        Value="{Binding $parent[Window].ViewModel.OpenRecentFileCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </MenuItem.Styles>
+                    </MenuItem>
+                    <MenuItem Header="_Import From Anibnd" InputGesture="Ctrl+I" HotKey="Ctrl+I"
+                              Command="{Binding ImportFromAnibndCommand}"
+                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <MenuItem Header="_Save" InputGesture="Ctrl+S" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" HotKey="Ctrl+Shift+S"
