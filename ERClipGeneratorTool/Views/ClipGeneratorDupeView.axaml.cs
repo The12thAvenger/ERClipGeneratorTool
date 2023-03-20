@@ -1,9 +1,8 @@
-using System;
 using Avalonia;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ERClipGeneratorTool.ViewModels;
 using ReactiveUI;
+using System;
 
 namespace ERClipGeneratorTool.Views;
 
@@ -20,10 +19,5 @@ public partial class ClipGeneratorDupeView : ReactiveWindow<ClipGeneratorDupeVie
 #if DEBUG
         this.AttachDevTools();
 #endif
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 }

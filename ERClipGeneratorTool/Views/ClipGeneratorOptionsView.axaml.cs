@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ERClipGeneratorTool.ViewModels;
 using ReactiveUI;
@@ -21,10 +20,5 @@ public partial class ClipGeneratorOptionsView : ReactiveWindow<ClipGeneratorOpti
 #if DEBUG
         this.AttachDevTools();
 #endif
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 }
