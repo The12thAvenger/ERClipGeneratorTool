@@ -204,7 +204,15 @@ public class BehaviorGraphViewModel : ViewModelBase
         int animId = int.Parse(animationName.Split("_")[1]);
         if (await DoesGeneratorExist(animationName)) return;
         hkbClipGenerator clipGenerator = ClipGeneratorViewModel.GetDefaultClipGenerator(animationName);
-        AddGeneratorWithHistory(clipGenerator, GetCMSGsByAnimId(animId));
+        List<CustomManualSelectorGenerator> parents = GetCMSGsByAnimId(animId);
+
+        // get mode from first sibling
+        if (parents.Count > 0 && parents[0].m_generators.Count > 0)
+        {
+            clipGenerator.m_mode = ((hkbClipGenerator)parents[0].m_generators[0]!).m_mode;
+        }
+
+        AddGeneratorWithHistory(clipGenerator, parents);
     }
 
     public void AddGeneratorWithHistory(hkbClipGenerator clipGenerator, List<CustomManualSelectorGenerator> parents)
