@@ -6,6 +6,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DynamicData;
+using DynamicData.Aggregation;
 using DynamicData.Binding;
 using ERClipGeneratorTool.Models.TAE;
 using ERClipGeneratorTool.Util;
@@ -22,7 +23,6 @@ public class BehaviorGraphViewModel : ViewModelBase
 {
     private readonly Dictionary<int, List<CustomManualSelectorGenerator>> _cmsgsByAnimId;
     private readonly IHistory _history;
-    private ClipGeneratorViewModel? _currentClipGenerator;
     private short _nextAnimationInternalId;
 
     public BehaviorGraphViewModel(hkRootLevelContainer rootLevelContainer, List<IHavokObject> objects, IHistory history,
@@ -79,11 +79,13 @@ public class BehaviorGraphViewModel : ViewModelBase
             .Bind(FilteredGenerators)
             .Subscribe();
 
-        NewGeneratorCommand = ReactiveCommand.CreateFromTask(NewGeneratorAsync);
+        AddGeneratorCommand = ReactiveCommand.CreateFromTask(NewGeneratorAsync);
 
-        IObservable<bool> isGeneratorSelected =
-            this.WhenAnyValue(x => x.CurrentClipGenerator).Select(x => x is not null);
-        DeleteCommand = ReactiveCommand.Create(DeleteCurrentGenerator, isGeneratorSelected);
+        IObservable<int> selectedGeneratorCount = SelectedClipGenerators.ToObservableChangeSet().Count();
+        DeleteCommand = ReactiveCommand.Create(DeleteSelectedGenerators, selectedGeneratorCount.Select(x => x > 0));
+
+        selectedGeneratorCount.Select(x => x == 1 ? SelectedClipGenerators[0] : null)
+            .ToPropertyEx(this, x => x.CurrentClipGenerator);
     }
 
     public ObservableCollection<ClipGeneratorViewModel> SelectedClipGenerators { get; } = new();
@@ -98,32 +100,21 @@ public class BehaviorGraphViewModel : ViewModelBase
 
     public ObservableCollectionExtended<ClipGeneratorViewModel> FilteredGenerators { get; }
 
-    public ClipGeneratorViewModel? CurrentClipGenerator
-    {
-        get => _currentClipGenerator;
-        set
-        {
-            if (value is not null)
-            {
-                this.RaiseAndSetIfChanged(ref _currentClipGenerator, value);
-            }
-        }
-    }
+    [ObservableAsProperty] public extern ClipGeneratorViewModel? CurrentClipGenerator { get; }
 
-    // bypasses null check
-    private ClipGeneratorViewModel? CurrentClipGeneratorInternal
-    {
-        get => _currentClipGenerator;
-        set => this.RaiseAndSetIfChanged(ref _currentClipGenerator, value, nameof(CurrentClipGenerator));
-    }
-
-    public ReactiveCommand<Unit, Unit> NewGeneratorCommand { get; }
+    public ReactiveCommand<Unit, Unit> AddGeneratorCommand { get; }
 
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
 
     public Interaction<ClipGeneratorOptionsViewModel, bool> GetClipGeneratorOptions { get; } = new();
     public Interaction<ClipGeneratorDupeViewModel, bool> GetClipGeneratorDupeOptions { get; } = new();
     public Interaction<AnibndImportViewModel, List<string>> ChooseAnimationsFromAnibnd { get; } = new();
+
+    private void SetCurrentClipGenerator(ClipGeneratorViewModel generator)
+    {
+        SelectedClipGenerators.Clear();
+        SelectedClipGenerators.Add(generator);
+    }
 
     public async Task DuplicateClipGeneratorAsync(ClipGeneratorViewModel scg, int taeId)
     {
@@ -229,7 +220,7 @@ public class BehaviorGraphViewModel : ViewModelBase
         {
             viewModel.AddToGraph(parents);
             ClipGenerators.AddOrUpdate(viewModel);
-            CurrentClipGeneratorInternal = viewModel;
+            SetCurrentClipGenerator(viewModel);
             _nextAnimationInternalId = (short)(nextAnimationInternalId + 1);
         }
 
@@ -238,14 +229,16 @@ public class BehaviorGraphViewModel : ViewModelBase
             ClipGenerators.Remove(viewModel);
             viewModel.Delete();
             _nextAnimationInternalId = nextAnimationInternalId;
-            CurrentClipGeneratorInternal = null;
+            SelectedClipGenerators.Clear();
         }
     }
 
-    public void DeleteCurrentGenerator()
+    public void DeleteSelectedGenerators()
     {
-        if (CurrentClipGenerator is null) return;
-        DeleteGeneratorWithHistory(CurrentClipGenerator);
+        foreach (ClipGeneratorViewModel generator in SelectedClipGenerators.ToArray())
+        {
+            DeleteGeneratorWithHistory(generator);
+        }
     }
 
     public void DeleteGeneratorWithHistory(ClipGeneratorViewModel viewModel)
@@ -256,16 +249,16 @@ public class BehaviorGraphViewModel : ViewModelBase
 
         void Redo()
         {
+            SelectedClipGenerators.Remove(viewModel);
             ClipGenerators.Remove(viewModel);
             viewModel.Delete();
-            CurrentClipGeneratorInternal = null;
         }
 
         void Undo()
         {
             viewModel.AddToGraph(parents);
             ClipGenerators.AddOrUpdate(viewModel);
-            CurrentClipGeneratorInternal = viewModel;
+            SetCurrentClipGenerator(viewModel);
         }
     }
 

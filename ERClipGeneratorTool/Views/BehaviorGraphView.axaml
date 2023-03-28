@@ -15,12 +15,11 @@
         <Grid RowDefinitions="40, *, 40" Grid.Column="0">
             <TextBox Text="{Binding Filter}" Watermark="Search..." Margin="0, 5" Grid.Row="0" />
             <ListBox Items="{Binding FilteredGenerators}"
-                     SelectedItem="{Binding CurrentClipGenerator}"
                      AutoScrollToSelectedItem="True"
-                     Grid.Row="1"
                      VerticalAlignment="Stretch"
                      SelectionMode="Multiple"
-                     SelectedItems="{Binding SelectedClipGenerators}">
+                     SelectedItems="{Binding SelectedClipGenerators}"
+                     Grid.Row="1">
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding DuplicateAsync}" Header="Duplicate To"></MenuItem>
@@ -34,7 +33,7 @@
             </ListBox>
             <Grid Height="40" ColumnDefinitions="*, *" Grid.Row="2">
                 <Button Content="Add" Background="{DynamicResource ThemeBackgroundBrush}"
-                        Command="{Binding NewGeneratorCommand}" Margin="0, 5" Grid.Column="0" />
+                        Command="{Binding AddGeneratorCommand}" Margin="0, 5" Grid.Column="0" />
                 <Button Content="Delete" Background="{DynamicResource ThemeBackgroundBrush}"
                         Command="{Binding DeleteCommand}" Margin="0, 5" Grid.Column="1" />
             </Grid>

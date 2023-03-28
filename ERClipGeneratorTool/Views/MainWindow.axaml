@@ -70,7 +70,7 @@
                     <MenuItem Header="_Redo" InputGesture="Ctrl+Shift+Z" HotKey="Ctrl+Shift+Z"
                               Command="{Binding RedoCommand}" />
                     <MenuItem Header="_Add Generator" InputGesture="Ctrl+N" HotKey="Ctrl+N"
-                              Command="{Binding BehaviorGraph.NewGeneratorCommand}"
+                              Command="{Binding BehaviorGraph.AddGeneratorCommand}"
                               IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     <MenuItem Header="_Delete Generator" InputGesture="Delete" HotKey="Delete"
                               Command="{Binding BehaviorGraph.DeleteCommand}"
