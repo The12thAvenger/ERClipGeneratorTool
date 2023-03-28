@@ -75,7 +75,7 @@ public class BehaviorGraphViewModel : ViewModelBase
         FilteredGenerators = new ObservableCollectionExtended<ClipGeneratorViewModel>();
         ClipGenerators.Connect()
             .Filter(generatorsFilter)
-            .SortBy(x => x.Name, sortOptimisations: SortOptimisations.IgnoreEvaluates)
+            .SortBy(x => x.Name)
             .Bind(FilteredGenerators)
             .Subscribe();
 
