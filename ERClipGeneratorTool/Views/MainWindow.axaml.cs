@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
-using Avalonia.VisualTree;
 using ERClipGeneratorTool.ViewModels;
 using ERClipGeneratorTool.ViewModels.Interactions;
 using MessageBox.Avalonia;

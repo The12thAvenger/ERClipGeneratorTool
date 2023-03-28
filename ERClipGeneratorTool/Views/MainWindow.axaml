@@ -69,6 +69,12 @@
                     <MenuItem Header="_Undo" InputGesture="Ctrl+Z" HotKey="Ctrl+Z" Command="{Binding UndoCommand}" />
                     <MenuItem Header="_Redo" InputGesture="Ctrl+Shift+Z" HotKey="Ctrl+Shift+Z"
                               Command="{Binding RedoCommand}" />
+                    <MenuItem Header="_Add Generator" InputGesture="Ctrl+N" HotKey="Ctrl+N"
+                              Command="{Binding BehaviorGraph.NewGeneratorCommand}"
+                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <MenuItem Header="_Delete Generator" InputGesture="Delete" HotKey="Delete"
+                              Command="{Binding BehaviorGraph.DeleteCommand}"
+                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                 </MenuItem>
             </Menu>
         </Grid>
