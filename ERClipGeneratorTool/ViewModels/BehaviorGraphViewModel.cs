@@ -131,10 +131,12 @@ public class BehaviorGraphViewModel : ViewModelBase
         string newName = scg.Name[..1] + taeSectionId + scg.Name[4..];
         string newAnimationName = scg.AnimationName[..1] + taeSectionId + scg.AnimationName[4..];
         if (await DoesGeneratorExist(newAnimationName, false)) return;
-        hkbClipGenerator selectedGenerator = scg.DuplicateInternal();
-        selectedGenerator.m_name = newName;
-        selectedGenerator.m_animationName = newAnimationName;
-        AddGeneratorWithHistory(selectedGenerator, scg.Parents.ToList());
+        hkbClipGenerator copiedGenerator = scg.DuplicateInternal();
+        copiedGenerator.m_name = newName;
+        copiedGenerator.m_animationName = newAnimationName;
+
+        // we need to get all parent generators so we don't use scg.Parents directly
+        AddGeneratorWithHistory(copiedGenerator, GetCMSGsByAnimId(scg.Parents[0].m_animId));
     }
 
     public async Task DuplicateAsync()
