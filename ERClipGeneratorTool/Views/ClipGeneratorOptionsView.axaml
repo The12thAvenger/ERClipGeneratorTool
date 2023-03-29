@@ -11,8 +11,7 @@
                            MaxHeight="100"
                            MaxWidth="300"
                            MinHeight="100"
-                           MinWidth="300"
-                           Icon="/Assets/hct.ico">
+                           MinWidth="300">
 
     <Design.DataContext>
         <viewModels:ClipGeneratorOptionsViewModel />

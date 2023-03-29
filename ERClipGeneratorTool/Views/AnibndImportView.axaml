@@ -9,15 +9,14 @@
                            x:Class="ERClipGeneratorTool.Views.AnibndImportView"
                            WindowStartupLocation="CenterOwner"
                            Height="300"
-                           Width="200"
-                           Icon="/Assets/hct.ico">
+                           Width="200">
 
     <Design.DataContext>
         <viewModels:AnibndImportViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="30, *, 40" Margin="5">
-        <TextBlock Text="Pick animations to register" VerticalAlignment="Center" Grid.Row="0" Margin="5, 0" />
+        <TextBlock Text="Pick TAE entries to register" VerticalAlignment="Center" Grid.Row="0" Margin="5, 0" />
         <ListBox Items="{Binding Animations}" Grid.Row="1" Margin="5">
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="viewModels:AnimationEntryViewModel">

@@ -7,7 +7,6 @@
                      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
                      x:Class="ERClipGeneratorTool.Views.MainWindow"
                      x:TypeArguments="vm:MainWindowViewModel"
-                     Icon="/Assets/hct.ico"
                      Title="ERClipGeneratorTool"
                      CanResize="True"
                      MinWidth="400"
