@@ -26,7 +26,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         this.WhenActivated(d =>
         {
             ViewModel!.GetFileSource.RegisterHandler(GetFilePathAsync).DisposeWith(d);
-            ViewModel!.ShowMessageBox.RegisterHandler(ShowMessageBoxAsync).DisposeWith(d);
+            GlobalInteractions.ShowMessageBox.RegisterHandler(ShowMessageBoxAsync).DisposeWith(d);
             ViewModel!.GetBndFileName.RegisterHandler(GetBndFileNameAsync).DisposeWith(d);
         });
     }

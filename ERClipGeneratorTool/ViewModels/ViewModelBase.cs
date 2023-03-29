@@ -3,8 +3,5 @@ using ReactiveUI;
 
 namespace ERClipGeneratorTool.ViewModels
 {
-    public class ViewModelBase : ReactiveObject
-    {
-        public Interaction<MessageBoxOptions, MessageBoxOptions.MessageBoxResult> ShowMessageBox { get; } = new();
-    }
+    public class ViewModelBase : ReactiveObject { }
 }

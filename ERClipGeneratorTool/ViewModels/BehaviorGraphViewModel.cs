@@ -158,7 +158,7 @@ public class BehaviorGraphViewModel : ViewModelBase
         {
             if (showDialogs)
             {
-                await ShowMessageBox.Handle(new MessageBoxOptions("Invalid Animation Name",
+                await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Invalid Animation Name",
                     "No suitable CustomManualSelectorGenerators were found for the given animation name.",
                     MessageBoxOptions.MessageBoxMode.Ok));
             }
@@ -172,7 +172,7 @@ public class BehaviorGraphViewModel : ViewModelBase
                                             && clipGenerator.m_animationName == animationName)) continue;
             if (showDialogs)
             {
-                await ShowMessageBox.Handle(
+                await GlobalInteractions.ShowMessageBox.Handle(
                     new MessageBoxOptions("Invalid Animation Name",
                         "A clip generator with this animation name has already been added to the behavior graph.",
                         MessageBoxOptions.MessageBoxMode.Ok));
@@ -267,7 +267,7 @@ public class BehaviorGraphViewModel : ViewModelBase
         List<string> newAnimNames = await Task.Run(() => GetNewAnimationNamesFromAnibnd(anibnd));
         if (newAnimNames.Count == 0)
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Import canceled",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Import canceled",
                 "The selected anibnd does not contain any unregistered animations.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return;

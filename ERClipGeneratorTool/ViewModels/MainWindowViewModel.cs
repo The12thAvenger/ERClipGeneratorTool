@@ -106,7 +106,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (!File.Exists(fileSource.FilePath))
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "The selected file no longer exists.",
                 MessageBoxOptions.MessageBoxMode.Ok));
         }
@@ -125,7 +125,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             if (!File.Exists(source.FilePath))
             {
-                await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading Binder",
+                await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading Binder",
                     "The specified binder file does not exist. Behavior files can only be saved to existing behbnds.",
                     MessageBoxOptions.MessageBoxMode.Ok));
                 return (false, null);
@@ -151,14 +151,14 @@ public class MainWindowViewModel : ViewModelBase
         }
         catch (InvalidDataException)
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "The selected file is not a valid Havok 2018 binary tagfile.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return false;
         }
         catch (Exception)
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "Failed to read the selected file.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return false;
@@ -166,7 +166,7 @@ public class MainWindowViewModel : ViewModelBase
 
         if (objects.Count == 0 || objects[0] is not hkRootLevelContainer rootLevelContainer)
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "The selected file does not contain an hkRootLevelContainer.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return false;
@@ -175,7 +175,7 @@ public class MainWindowViewModel : ViewModelBase
         if (rootLevelContainer.m_namedVariants.Count == 0 ||
             rootLevelContainer.m_namedVariants[0].m_variant is not hkbBehaviorGraph)
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "The selected file does not contain an hkbBehaviorGraph.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return false;
@@ -183,7 +183,7 @@ public class MainWindowViewModel : ViewModelBase
 
         if (!objects.Any(x => x is hkbClipGenerator))
         {
-            await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
                 "The selected file does not contain any hkbClipGenerators.",
                 MessageBoxOptions.MessageBoxMode.Ok));
             return false;
@@ -284,7 +284,7 @@ public class MainWindowViewModel : ViewModelBase
         BND4 bnd = null!;
         if (await Task.Run(() => BND4.IsRead(path, out bnd))) return bnd;
 
-        await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+        await GlobalInteractions.ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
             "The selected file is not a valid binder file.",
             MessageBoxOptions.MessageBoxMode.Ok));
         return null;
