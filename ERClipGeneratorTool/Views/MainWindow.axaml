@@ -44,7 +44,7 @@
         <Grid ColumnDefinitions="Auto, *" Grid.Row="0">
             <Menu Height="30" Grid.Column="0">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open..." InputGesture="Ctrl+O" HotKey="Ctrl+O"
+                    <MenuItem Header="_Open..." InputGesture="Ctrl+O"
                               Command="{Binding OpenFileCommand}" />
                     <MenuItem Header="Open _Recent" Items="{Binding RecentFiles}" IsEnabled="{Binding HasRecentFiles}">
                         <MenuItem.Styles>
@@ -56,25 +56,18 @@
                             </Style>
                         </MenuItem.Styles>
                     </MenuItem>
-                    <MenuItem Header="_Import From Anibnd" InputGesture="Ctrl+I" HotKey="Ctrl+I"
-                              Command="{Binding ImportFromAnibndCommand}"
-                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <MenuItem Header="_Save" InputGesture="Ctrl+S" HotKey="Ctrl+S" Command="{Binding SaveFileCommand}"
-                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" HotKey="Ctrl+Shift+S"
-                              Command="{Binding SaveFileAsCommand}"
-                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <MenuItem Header="_Import From Anibnd" InputGesture="Ctrl+I"
+                              Command="{Binding ImportFromAnibndCommand}" />
+                    <MenuItem Header="_Save" InputGesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
+                    <MenuItem Header="Save As..." InputGesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Undo" InputGesture="Ctrl+Z" HotKey="Ctrl+Z" Command="{Binding UndoCommand}" />
-                    <MenuItem Header="_Redo" InputGesture="Ctrl+Shift+Z" HotKey="Ctrl+Shift+Z"
-                              Command="{Binding RedoCommand}" />
-                    <MenuItem Header="_Add Generator" InputGesture="Ctrl+N" HotKey="Ctrl+N"
-                              Command="{Binding BehaviorGraph.AddGeneratorCommand}"
-                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <MenuItem Header="_Undo" InputGesture="Ctrl+Z" Command="{Binding UndoCommand}" />
+                    <MenuItem Header="_Redo" InputGesture="Ctrl+Shift+Z" Command="{Binding RedoCommand}" />
+                    <MenuItem Header="_Add Generator" InputGesture="Ctrl+N"
+                              Command="{Binding BehaviorGraph.AddGeneratorCommand}" />
                     <MenuItem Header="_Delete Generator" InputGesture="Delete" HotKey="Delete"
-                              Command="{Binding BehaviorGraph.DeleteCommand}"
-                              IsEnabled="{Binding BehaviorGraph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                              Command="{Binding BehaviorGraph.DeleteCommand}" />
                 </MenuItem>
             </Menu>
         </Grid>
@@ -84,6 +77,23 @@
                         BorderBrush="{DynamicResource ThemeBorderLowBrush}"
                         BorderThickness="{DynamicResource ThemeBorderThickness}"
                         Grid.Row="1" />
+        <Border BorderBrush="{DynamicResource ThemeBorderHighBrush}" BorderThickness="1"
+                Background="{DynamicResource ThemeBackgroundBrush}" IsVisible="{Binding Progress.IsActive}"
+                Width="300" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+            <Grid RowDefinitions="1.5*, *" Margin="5">
+                <TextBlock Text="{Binding Progress.Status}" VerticalAlignment="Center" Grid.Row="0" />
+                <ProgressBar IsIndeterminate="True" Grid.Row="1" />
+            </Grid>
+        </Border>
     </Grid>
-
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileCommand}" />
+        <KeyBinding Gesture="Ctrl+I" Command="{Binding ImportFromAnibndCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+S" Command="{Binding SaveFileAsCommand}" />
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding UndoCommand}" />
+        <KeyBinding Gesture="Ctrl+Shift+Z" Command="{Binding RedoCommand}" />
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding BehaviorGraph.AddGeneratorCommand}" />
+        <KeyBinding Gesture="Delete" Command="{Binding BehaviorGraph.DeleteCommand}" />
+    </Window.KeyBindings>
 </rxui:ReactiveWindow>

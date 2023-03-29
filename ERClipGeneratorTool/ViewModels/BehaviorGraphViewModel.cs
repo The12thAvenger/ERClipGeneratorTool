@@ -264,7 +264,7 @@ public class BehaviorGraphViewModel : ViewModelBase
 
     public async Task ImportFromAnibndAsync(BND4 anibnd)
     {
-        List<string> newAnimNames = GetNewAnimationNamesFromAnibnd(anibnd);
+        List<string> newAnimNames = await Task.Run(() => GetNewAnimationNamesFromAnibnd(anibnd));
         if (newAnimNames.Count == 0)
         {
             await ShowMessageBox.Handle(new MessageBoxOptions("Import canceled",

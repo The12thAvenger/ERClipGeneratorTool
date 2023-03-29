@@ -31,19 +31,29 @@ public class MainWindowViewModel : ViewModelBase
             RedoCommand = ReactiveCommand.Create(x.Redo, x.CanRedo);
         });
 
+        IObservable<bool> isFileLoaded = this.WhenAnyValue(x => x.BehaviorGraph).Select(x => x is not null);
+
         OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
         OpenRecentFileCommand = ReactiveCommand.CreateFromTask<FileSource>(OpenRecentFileAsync);
-        ImportFromAnibndCommand = ReactiveCommand.CreateFromTask(ImportFromAnibndAsync);
-        SaveFileCommand = ReactiveCommand.Create(SaveFile);
-        SaveFileAsCommand = ReactiveCommand.CreateFromTask(SaveFileAsAsync);
+        ImportFromAnibndCommand = ReactiveCommand.CreateFromTask(ImportFromAnibndAsync, isFileLoaded);
+        SaveFileCommand = ReactiveCommand.CreateFromTask(x => Task.Run(SaveFile, x), isFileLoaded);
+        SaveFileAsCommand = ReactiveCommand.CreateFromTask(SaveFileAsAsync, isFileLoaded);
 
         RecentFiles.ToObservableChangeSet().IsEmpty().Select(x => !x).ToPropertyEx(this, x => x.HasRecentFiles);
+
+        OpenFileCommand.IsExecuting.Subscribe(x => ObserveProgress(x, "Opening File..."));
+        OpenRecentFileCommand.IsExecuting.Subscribe(x => ObserveProgress(x, "Opening File..."));
+        ImportFromAnibndCommand.IsExecuting.Subscribe(x => ObserveProgress(x, "Importing Tae Entries..."));
+        SaveFileCommand.IsExecuting.Subscribe(x => ObserveProgress(x, "Saving File..."));
+        SaveFileAsCommand.IsExecuting.Subscribe(x => ObserveProgress(x, "Saving File..."));
     }
 
 
     public ObservableCollection<FileSource> RecentFiles => Settings.Current.RecentFiles;
 
-    [ObservableAsProperty] public bool HasRecentFiles { get; }
+    [ObservableAsProperty] public extern bool HasRecentFiles { get; }
+
+    public ProgressViewModel Progress { get; } = new();
 
     [Reactive] private IHistory History { get; set; }
 
@@ -64,6 +74,12 @@ public class MainWindowViewModel : ViewModelBase
 
     public Interaction<FilePathOptions, FileSource?> GetFileSource { get; } = new();
     public Interaction<BndOpenViewModel, string?> GetBndFileName { get; } = new();
+
+    private void ObserveProgress(bool isActive, string status)
+    {
+        Progress.IsActive = isActive;
+        Progress.Status = status;
+    }
 
     private async Task OpenFileAsync()
     {
@@ -115,13 +131,7 @@ public class MainWindowViewModel : ViewModelBase
                 return (false, null);
             }
 
-            if (!BND4.IsRead(source.FilePath, out BND4 bnd))
-            {
-                await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading Binder",
-                    "The selected file is not a valid binder file.",
-                    MessageBoxOptions.MessageBoxMode.Ok));
-                return (false, null);
-            }
+            if (await LoadBndAsync(source.FilePath) is not { } bnd) return (false, null);
 
             string? bndFileName = await GetBndFileName.Handle(new BndOpenViewModel(bnd));
             if (bndFileName is null) return (false, null);
@@ -137,7 +147,7 @@ public class MainWindowViewModel : ViewModelBase
         List<IHavokObject> objects;
         try
         {
-            objects = serializer.ReadAllObjects(fileSource.GetReadStream()).ToList();
+            objects = await Task.Run(() => serializer.ReadAllObjects(fileSource.GetReadStream()).ToList());
         }
         catch (InvalidDataException)
         {
@@ -231,14 +241,7 @@ public class MainWindowViewModel : ViewModelBase
             FileSource? source = await GetFileSource.Handle(options);
             if (source is null) return;
 
-            if (!BND4.IsRead(source.FilePath, out BND4 bnd))
-            {
-                await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
-                    "The selected file is not a valid anibnd.",
-                    MessageBoxOptions.MessageBoxMode.Ok));
-                continue;
-            }
-
+            if (await LoadBndAsync(source.FilePath) is not { } bnd) continue;
             await BehaviorGraph.ImportFromAnibndAsync(bnd);
             break;
         }
@@ -270,8 +273,20 @@ public class MainWindowViewModel : ViewModelBase
             if (source is null) continue;
 
             BehaviorGraph!.FileSource = source;
-            SaveFile();
+            AddRecentFile(source);
+            await Task.Run(SaveFile);
             break;
         }
+    }
+
+    private async Task<BND4?> LoadBndAsync(string path)
+    {
+        BND4 bnd = null!;
+        if (await Task.Run(() => BND4.IsRead(path, out bnd))) return bnd;
+
+        await ShowMessageBox.Handle(new MessageBoxOptions("Error Loading File",
+            "The selected file is not a valid binder file.",
+            MessageBoxOptions.MessageBoxMode.Ok));
+        return null;
     }
 }
