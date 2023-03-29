@@ -9,8 +9,7 @@
                            x:Class="ERClipGeneratorTool.Views.BndOpenView"
                            WindowStartupLocation="CenterOwner"
                            Height="300"
-                           Width="400"
-                           Icon="/Assets/hct.ico">
+                           Width="400">
 
     <Design.DataContext>
         <viewModels:BndOpenViewModel />

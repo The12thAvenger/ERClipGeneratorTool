@@ -7,53 +7,53 @@
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <LangVersion>11</LangVersion>
-        <ApplicationIcon>Assets\hct.ico</ApplicationIcon>
+        <ApplicationIcon>Assets\hbt.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\" />
-        <AvaloniaResource Include="Assets\**" />
-        <None Remove=".gitignore" />
+        <Folder Include="Models\"/>
+        <AvaloniaResource Include="Assets\**"/>
+        <None Remove=".gitignore"/>
         <None Update="Settings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
         If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
         https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-        <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-        <TrimmableAssembly Include="Avalonia.Themes.Default" />
+        <TrimmableAssembly Include="Avalonia.Themes.Fluent"/>
+        <TrimmableAssembly Include="Avalonia.Themes.Default"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.0-preview5" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview5" />
+        <PackageReference Include="Avalonia" Version="11.0.0-preview5"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview5"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview5" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview5" />
-        <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-prev5" />
-        <PackageReference Include="ReactiveHistory" Version="0.10.7" />
-        <PackageReference Include="ReactiveProperty" Version="9.0.0" />
-        <PackageReference Include="ReactiveUI.Fody" Version="18.4.26" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0-preview5"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0-preview5"/>
+        <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-prev5"/>
+        <PackageReference Include="ReactiveHistory" Version="0.10.7"/>
+        <PackageReference Include="ReactiveProperty" Version="9.0.0"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="18.4.26"/>
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0"/>
+        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1"/>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\HKLib\HKLib.Serialization\HKLib.Serialization.csproj" />
-      <ProjectReference Include="..\SoulsFormats\SoulsFormats\SoulsFormats.csproj" />
+        <ProjectReference Include="..\HKLib\HKLib.Serialization\HKLib.Serialization.csproj"/>
+        <ProjectReference Include="..\SoulsFormats\SoulsFormats\SoulsFormats.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="Avalonia.Themes.Simple">
-        <HintPath>..\..\..\.nuget\packages\avalonia.themes.simple\11.0.0-preview5\lib\net6.0\Avalonia.Themes.Simple.dll</HintPath>
-      </Reference>
+        <Reference Include="Avalonia.Themes.Simple">
+            <HintPath>..\..\..\.nuget\packages\avalonia.themes.simple\11.0.0-preview5\lib\net6.0\Avalonia.Themes.Simple.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Views\AnibndImportView.axaml.cs">
-        <DependentUpon>AnibndImportView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\BndOpenView.axaml.cs">
-        <DependentUpon>BndOpenView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\AnibndImportView.axaml.cs">
+            <DependentUpon>AnibndImportView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\BndOpenView.axaml.cs">
+            <DependentUpon>BndOpenView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 </Project>

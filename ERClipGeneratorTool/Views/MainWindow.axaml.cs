@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
@@ -48,8 +49,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 ContentTitle = options.Header,
                 ContentMessage = options.Message,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                WindowIcon = Icon
             });
-
         ButtonResult result = await messageBox.Show(this);
         return (MessageBoxOptions.MessageBoxResult)result;
     }
