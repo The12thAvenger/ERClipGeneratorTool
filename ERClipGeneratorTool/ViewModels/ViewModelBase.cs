@@ -1,5 +1,4 @@
-﻿using ERClipGeneratorTool.ViewModels.Interactions;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace ERClipGeneratorTool.ViewModels
 {
