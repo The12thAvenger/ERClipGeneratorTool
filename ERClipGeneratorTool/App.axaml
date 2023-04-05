@@ -12,5 +12,9 @@
         <Style Selector="Window">
             <Setter Property="Icon" Value="/Assets/hbt.ico" />
         </Style>
+        <!-- Full screen border workaround -->
+        <Style Selector="Window[WindowState=Maximized]">
+            <Setter Property="Padding" Value="8" />
+        </Style>
     </Application.Styles>
 </Application>
