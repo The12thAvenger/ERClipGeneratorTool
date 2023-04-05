@@ -121,7 +121,7 @@ public class MainWindowViewModel : ViewModelBase
         FileSource? source = await GetFileSource.Handle(options);
         if (source is null) return (true, null);
 
-        if (source.FilePath.EndsWith(".behbnd.dcx") || source.FilePath.EndsWith(".behbnd"))
+        if (source.FilePath.EndsWith(".dcx") || source.FilePath.EndsWith(".behbnd"))
         {
             if (!File.Exists(source.FilePath))
             {
