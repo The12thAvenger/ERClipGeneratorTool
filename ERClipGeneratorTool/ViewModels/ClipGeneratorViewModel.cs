@@ -144,7 +144,8 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         hkbClipGenerator.PlaybackMode.MODE_LOOPING,
         hkbClipGenerator.PlaybackMode.MODE_USER_CONTROLLED,
         hkbClipGenerator.PlaybackMode.MODE_PING_PONG,
-        hkbClipGenerator.PlaybackMode.MODE_COUNT
+        // not used, keeps track of the number of enum elements
+        // hkbClipGenerator.PlaybackMode.MODE_COUNT
     };
 
     public hkbClipGenerator.ClipFlags Flags
