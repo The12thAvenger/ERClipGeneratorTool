@@ -34,8 +34,7 @@ public class BehaviorGraphViewModel : ViewModelBase
 
         List<CustomManualSelectorGenerator> cmsgs = objects
             .Where(x => x is CustomManualSelectorGenerator cmsg
-                        && cmsg.m_generators.Count > 0
-                        && cmsg.m_generators[0] is hkbClipGenerator)
+                        && cmsg.m_generators.All(y => y is hkbClipGenerator))
             .Cast<CustomManualSelectorGenerator>().ToList();
 
         Dictionary<hkbClipGenerator, List<CustomManualSelectorGenerator>> clipParents = objects
