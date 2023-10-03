@@ -106,7 +106,7 @@ public class BehaviorGraphViewModel : ViewModelBase
 
     public ObservableCollectionExtended<ClipGeneratorViewModel> FilteredGenerators { get; }
 
-    [ObservableAsProperty] public extern ClipGeneratorViewModel? CurrentClipGenerator { get; }
+    [ObservableAsProperty] public ClipGeneratorViewModel? CurrentClipGenerator { get; }
 
     public ReactiveCommand<Unit, Unit> AddGeneratorCommand { get; }
 

@@ -51,7 +51,7 @@ public class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<FileSource> RecentFiles => Settings.Current.RecentFiles;
 
-    [ObservableAsProperty] public extern bool HasRecentFiles { get; }
+    [ObservableAsProperty] public bool HasRecentFiles { get; }
 
     public ProgressViewModel Progress { get; } = new();
 

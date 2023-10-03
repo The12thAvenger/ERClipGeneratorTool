@@ -10,10 +10,11 @@ using Avalonia.Styling;
 
 namespace ERClipGeneratorTool.Controls;
 
+#pragma warning disable AVP1002
 // Adapted from Avalonia.Diagnostics
 // TextBox which continously validates the input but only propagates it when losing focus or when the user presses enter.
 // Invalid values are never propagated, instead the content of the TextBox is reset to the last valid value.
-public class CommitTextBox<T> : TextBox, IStyleable
+public class CommitTextBox<T> : TextBox
 {
     /// <summary>
     /// Defines the <see cref="CommittedValue" /> property.
@@ -33,7 +34,7 @@ public class CommitTextBox<T> : TextBox, IStyleable
 
     public ValidationContext? ValidationContext { get; set; }
 
-    Type IStyleable.StyleKey => typeof(TextBox);
+    protected override Type StyleKeyOverride => typeof(TextBox);
 
     public override void EndInit()
     {
