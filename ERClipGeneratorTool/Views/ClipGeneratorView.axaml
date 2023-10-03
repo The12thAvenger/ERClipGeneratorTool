@@ -23,7 +23,7 @@
                                 IsEnabled="False"
                                 Grid.Column="1" Grid.Row="1" />
         <TextBlock Text="Mode" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" />
-        <ComboBox Items="{Binding PlaybackModes}" SelectedItem="{Binding Mode}" Grid.Column="1" Grid.Row="2" />
+        <ComboBox ItemsSource="{Binding PlaybackModes}" SelectedItem="{Binding Mode}" Grid.Column="1" Grid.Row="2" />
         <Expander Header="Flags" Grid.Column="0" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="0, 5"
                   Grid.Row="3">
             <StackPanel>
@@ -37,6 +37,6 @@
                 <CheckBox Content="Ignore Motion" IsChecked="{Binding IgnoreMotion}" Margin="0, 5" />
             </StackPanel>
         </Expander>
-        <ItemsControl Items="{Binding Properties}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" />
+        <ItemsControl ItemsSource="{Binding Properties}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" />
     </Grid>
 </reactiveUi:ReactiveUserControl>

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using ERClipGeneratorTool.ViewModels;
 using ERClipGeneratorTool.ViewModels.Interactions;
-using MessageBox.Avalonia;
-using MessageBox.Avalonia.BaseWindows.Base;
-using MessageBox.Avalonia.DTO;
-using MessageBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Base;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
 using ReactiveUI;
 
 namespace ERClipGeneratorTool.Views;
@@ -32,7 +31,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     }
 
     private async Task ShowMessageBoxAsync(
-        InteractionContext<MessageBoxOptions, MessageBoxOptions.MessageBoxResult> interaction)
+        IInteractionContext<MessageBoxOptions, MessageBoxOptions.MessageBoxResult> interaction)
     {
         MessageBoxOptions options = interaction.Input;
         interaction.SetOutput(await ShowMessageBoxAsync(options));
@@ -41,21 +40,20 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private async Task<MessageBoxOptions.MessageBoxResult> ShowMessageBoxAsync(MessageBoxOptions options)
     {
         ButtonEnum mode = (ButtonEnum)options.Mode;
-        IMsBoxWindow<ButtonResult> messageBox =
-            MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams
-            {
-                ButtonDefinitions = mode,
-                CanResize = false,
-                ContentTitle = options.Header,
-                ContentMessage = options.Message,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                WindowIcon = Icon
-            });
-        ButtonResult result = await messageBox.Show(this);
+        IMsBox<ButtonResult> messageBox = MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
+        {
+            ButtonDefinitions = mode,
+            CanResize = false,
+            ContentTitle = options.Header,
+            ContentMessage = options.Message,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            WindowIcon = Icon
+        });
+        ButtonResult result = await messageBox.ShowWindowDialogAsync(this);
         return (MessageBoxOptions.MessageBoxResult)result;
     }
 
-    private async Task GetFilePathAsync(InteractionContext<FilePathOptions, FileSource?> interaction)
+    private async Task GetFilePathAsync(IInteractionContext<FilePathOptions, FileSource?> interaction)
     {
         string? path;
         switch (interaction.Input.Mode)
@@ -92,7 +90,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         interaction.SetOutput(path is null ? null : new FileSource(path));
     }
 
-    private async Task GetBndFileNameAsync(InteractionContext<BndOpenViewModel, string?> interaction)
+    private async Task GetBndFileNameAsync(IInteractionContext<BndOpenViewModel, string?> interaction)
     {
         BndOpenView view = new()
         {

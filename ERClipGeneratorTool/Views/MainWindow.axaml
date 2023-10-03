@@ -45,7 +45,8 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open..." InputGesture="Ctrl+O"
                               Command="{Binding OpenFileCommand}" />
-                    <MenuItem Header="Open _Recent" Items="{Binding RecentFiles}" IsEnabled="{Binding HasRecentFiles}">
+                    <MenuItem Header="Open _Recent" ItemsSource="{Binding RecentFiles}"
+                              IsEnabled="{Binding HasRecentFiles}">
                         <MenuItem.Styles>
                             <Style Selector="MenuItem">
                                 <Setter Property="Header" Value="{Binding DisplayPath}" />

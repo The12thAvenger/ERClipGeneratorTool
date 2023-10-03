@@ -69,7 +69,7 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
         return bindingState.IsBound;
     }
 
-    private async Task GetBindingVariableIndex(InteractionContext<VariableSelectorViewModel, int> interaction)
+    private async Task GetBindingVariableIndex(IInteractionContext<VariableSelectorViewModel, int> interaction)
     {
         VariableSelectorView view = new()
         {
@@ -81,7 +81,7 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
     private void InitializeComponent()
     {
         _name.VerticalAlignment = VerticalAlignment.Center;
-        _bindingState.Items = BindingState.Values;
+        _bindingState.ItemsSource = BindingState.Values;
         _changeVariable.Content = new TextBlock();
         _changeVariable.BorderThickness = new Thickness(0.1);
         Grid grid = new()

@@ -17,7 +17,7 @@
 
     <Grid RowDefinitions="30, *, 40" Margin="5">
         <TextBlock Text="Choose File From Binder" VerticalAlignment="Center" Grid.Row="0" Margin="5, 0" />
-        <ListBox Items="{Binding Files}" SelectedItem="{Binding SelectedFile}" Grid.Row="1" Margin="5">
+        <ListBox ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedFile}" Grid.Row="1" Margin="5">
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="viewModels:BndFileViewModel">
                     <TextBlock Text="{Binding Name}" />

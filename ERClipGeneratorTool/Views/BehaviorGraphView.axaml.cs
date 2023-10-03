@@ -23,7 +23,8 @@ public partial class BehaviorGraphView : ReactiveUserControl<BehaviorGraphViewMo
         });
     }
 
-    private async Task GetClipGeneratorOptionsAsync(InteractionContext<ClipGeneratorOptionsViewModel, bool> interaction)
+    private async Task GetClipGeneratorOptionsAsync(
+        IInteractionContext<ClipGeneratorOptionsViewModel, bool> interaction)
     {
         ClipGeneratorOptionsView view = new()
         {
@@ -34,7 +35,7 @@ public partial class BehaviorGraphView : ReactiveUserControl<BehaviorGraphViewMo
     }
 
     private async Task GetClipGeneratorDupeOptionsAsync(
-        InteractionContext<ClipGeneratorDupeViewModel, bool> interaction)
+        IInteractionContext<ClipGeneratorDupeViewModel, bool> interaction)
     {
         ClipGeneratorDupeView view = new()
         {
@@ -45,7 +46,7 @@ public partial class BehaviorGraphView : ReactiveUserControl<BehaviorGraphViewMo
     }
 
     private async Task ChooseAnimationsFromAnibndAsync(
-        InteractionContext<AnibndImportViewModel, List<string>> interaction)
+        IInteractionContext<AnibndImportViewModel, List<string>> interaction)
     {
         AnibndImportView view = new()
         {

@@ -17,7 +17,7 @@
 
     <Grid RowDefinitions="30, *, 40" Margin="5">
         <TextBlock Text="Pick TAE entries to register" VerticalAlignment="Center" Grid.Row="0" Margin="5, 0" />
-        <ListBox Items="{Binding Animations}" Grid.Row="1" Margin="5">
+        <ListBox ItemsSource="{Binding Animations}" Grid.Row="1" Margin="5">
             <ListBox.DataTemplates>
                 <DataTemplate x:DataType="viewModels:AnimationEntryViewModel">
                     <CheckBox IsChecked="{Binding Import}">
