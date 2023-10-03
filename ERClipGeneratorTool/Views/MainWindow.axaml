@@ -77,13 +77,16 @@
                         BorderBrush="{DynamicResource ThemeBorderLowBrush}"
                         BorderThickness="{DynamicResource ThemeBorderThickness}"
                         Grid.Row="1" />
-        <Border BorderBrush="{DynamicResource ThemeBorderHighBrush}" BorderThickness="1"
-                Background="{DynamicResource ThemeBackgroundBrush}" IsVisible="{Binding Progress.IsActive}"
-                Width="300" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
-            <Grid RowDefinitions="1.5*, *" Margin="5">
-                <TextBlock Text="{Binding Progress.Status}" VerticalAlignment="Center" Grid.Row="0" />
-                <ProgressBar IsIndeterminate="True" Grid.Row="1" />
-            </Grid>
+        <Border Background="{DynamicResource ThemeControlTransparentBrush}" IsVisible="{Binding Progress.IsActive}"
+                Grid.Row="0" Grid.RowSpan="2">
+            <Border BorderBrush="{DynamicResource ThemeBorderHighBrush}" BorderThickness="1"
+                    Background="{DynamicResource ThemeBackgroundBrush}"
+                    Width="300" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid RowDefinitions="1.5*, *" Margin="5">
+                    <TextBlock Text="{Binding Progress.Status}" VerticalAlignment="Center" Grid.Row="0" />
+                    <ProgressBar IsIndeterminate="True" Grid.Row="1" />
+                </Grid>
+            </Border>
         </Border>
     </Grid>
     <Window.KeyBindings>
