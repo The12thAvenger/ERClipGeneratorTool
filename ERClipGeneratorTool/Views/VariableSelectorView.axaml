@@ -16,13 +16,13 @@
     </Design.DataContext>
 
     <ScrollViewer>
-        <Grid RowDefinitions="40, 360, 40, 40" Margin="5">
+        <Grid RowDefinitions="40, 320, 40, 40" Margin="5">
             <TextBox Text="{Binding Filter}" Grid.Row="0" Margin="5" />
             <ListBox Name="MaterialListBox" ItemsSource="{Binding FilteredVariables}"
-                     SelectedItem="{Binding SelectedVariable}" SelectionMode="Single" AutoScrollToSelectedItem="True"
+                     SelectedItem="{Binding SelectedVariable}" SelectionMode="Single"
                      VerticalAlignment="Stretch" Grid.Row="1" Margin="5" />
             <TextBox Text="{Binding SelectedVariable}" IsEnabled="False" Grid.Row="2" Margin="5" />
-            <Grid ColumnDefinitions="*, *" Grid.Row="3">
+            <Grid ColumnDefinitions="*, *" Grid.Row="3" Margin="5">
                 <Button Content="Cancel" Command="{Binding CancelCommand}" ToolTip.Tip="Shortcut: Esc"
                         Margin="0, 0, 2, 0" Grid.Column="0" />
                 <Button Content="Ok" Command="{Binding ConfirmCommand}" ToolTip.Tip="Shortcut: Enter"

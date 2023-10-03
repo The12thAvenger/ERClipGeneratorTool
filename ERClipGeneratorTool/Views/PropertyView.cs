@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.ReactiveUI;
@@ -9,7 +12,6 @@ using Avalonia.VisualTree;
 using ERClipGeneratorTool.Controls;
 using ERClipGeneratorTool.ViewModels;
 using ReactiveUI;
-using ObservableExtensions = Reactive.Bindings.TinyLinq.ObservableExtensions;
 
 namespace ERClipGeneratorTool.Views;
 
@@ -48,12 +50,13 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
                     view => view._changeVariable)
                 .DisposeWith(d);
 
-            ObservableExtensions.Select(this.WhenAnyValue(x => x.ViewModel!.IsBound), x => !x)
-                .BindTo(_value, x => x.IsVisible)
-                .DisposeWith(d);
-            this.WhenAnyValue(x => x.ViewModel!.IsBound).BindTo(_changeVariable, x => x.IsVisible).DisposeWith(d);
+            IObservable<bool> isBound = this.WhenAnyValue(x => x.ViewModel!.IsBound);
+            isBound.Select(x => !x).BindTo(_value, x => x.IsVisible).DisposeWith(d);
+            isBound.BindTo(_changeVariable, x => x.IsVisible).DisposeWith(d);
+
             this.WhenAnyValue(x => x.ViewModel!.VariableName).BindTo((TextBlock)_changeVariable.Content!, x => x.Text)
                 .DisposeWith(d);
+            _changeVariable[!ToolTip.TipProperty] = new Binding(nameof(ViewModel.VariableName));
         });
     }
 
@@ -80,6 +83,8 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
         _bindingState.ItemsSource = BindingState.Values;
         _changeVariable.Content = new TextBlock();
         _changeVariable[!BackgroundProperty] = new DynamicResourceExtension("ThemeBackgroundBrush");
+        _changeVariable[!BorderBrushProperty] = new DynamicResourceExtension("ThemeBorderMidBrush");
+        _changeVariable[!BorderThicknessProperty] = new DynamicResourceExtension("ThemeBorderThickness");
 
         Grid grid = new()
         {

@@ -14,9 +14,10 @@ public class VariableSelectorViewModel : ViewModelBase
 {
     private readonly IReadOnlyList<string> _variableNames;
 
-    public VariableSelectorViewModel(IReadOnlyList<string> variableNames)
+    public VariableSelectorViewModel(IReadOnlyList<string> variableNames, string? selectedVariable)
     {
         _variableNames = variableNames;
+        SelectedVariable = selectedVariable;
 
         SourceList<string> variableNameList = new();
         variableNameList.AddRange(_variableNames);

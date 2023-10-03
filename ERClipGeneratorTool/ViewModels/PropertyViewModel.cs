@@ -197,7 +197,8 @@ public class PropertyViewModel<T> : ViewModelBase, IActivatableViewModel
 
     private async Task<int> GetVariableIndexAsync()
     {
-        VariableSelectorViewModel vm = new(_behaviorGraph.m_data!.m_stringData!.m_variableNames!);
+        VariableSelectorViewModel vm = new(_behaviorGraph.m_data!.m_stringData!.m_variableNames!,
+            VariableIndex < 0 ? null : VariableName);
         return await GetBindingVariableIndex.Handle(vm);
     }
 }
