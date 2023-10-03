@@ -8,6 +8,7 @@ using ERClipGeneratorTool.Util;
 using HKLib.hk2018;
 using ReactiveHistory;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
@@ -15,17 +16,37 @@ namespace ERClipGeneratorTool.ViewModels;
 
 public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewModel
 {
+    private readonly hkbBehaviorGraph _behaviorGraph;
     private readonly hkbClipGenerator _clipGenerator;
     private readonly IHistory _history;
     private readonly List<CustomManualSelectorGenerator> _parents;
 
-    public ClipGeneratorViewModel(hkbClipGenerator clipGenerator, List<CustomManualSelectorGenerator> parents,
+    public ClipGeneratorViewModel(hkbBehaviorGraph behaviorGraph, hkbClipGenerator clipGenerator,
+        List<CustomManualSelectorGenerator> parents,
         IHistory history)
     {
+        _behaviorGraph = behaviorGraph;
         _clipGenerator = clipGenerator;
         _history = history;
         _parents = parents;
         Activator = new ViewModelActivator();
+        Properties = new List<ViewModelBase>
+        {
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_playbackSpeed, "playbackSpeed",
+                history),
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_startTime, "startTime",
+                history),
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropStartAmountLocalTime,
+                "cropStartAmountLocalTime", history),
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropEndAmountLocalTime,
+                "cropEndAmountLocalTime", history),
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_enforcedDuration,
+                "enforcedDuration", history),
+            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_userControlledTimeFraction,
+                "userControlledTimeFraction", history),
+            new PropertyViewModel<uint>(behaviorGraph, clipGenerator, x => ref x.m_userPartitionMask,
+                "userPartitionMask", history)
+        };
         this.WhenActivated(d =>
         {
             DeleteCommand = ReactiveCommand.Create(Delete).DisposeWith(d);
@@ -35,21 +56,6 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
                 clipGenerator.m_animationName, history);
             this.WhenAnyValue(x => x.AnimationInternalId).ObserveWithHistory(value => AnimationInternalId = value,
                 clipGenerator.m_animationInternalId, history);
-            this.WhenAnyValue(x => x.StartTime).ObserveWithHistory(value => StartTime = value,
-                clipGenerator.m_startTime, history);
-            this.WhenAnyValue(x => x.CropStart).ObserveWithHistory(value => CropStart = value,
-                clipGenerator.m_cropStartAmountLocalTime, history);
-            this.WhenAnyValue(x => x.CropEnd).ObserveWithHistory(value => CropEnd = value,
-                clipGenerator.m_cropEndAmountLocalTime, history);
-            this.WhenAnyValue(x => x.EnforcedDuration).ObserveWithHistory(value => EnforcedDuration = value,
-                clipGenerator.m_enforcedDuration, history);
-            this.WhenAnyValue(x => x.UserControlledTimeFraction).ObserveWithHistory(
-                value => UserControlledTimeFraction = value,
-                clipGenerator.m_userControlledTimeFraction, history);
-            this.WhenAnyValue(x => x.UserPartitionMask).ObserveWithHistory(value => UserPartitionMask = value,
-                clipGenerator.m_userPartitionMask, history);
-            this.WhenAnyValue(x => x.PlaybackSpeed).ObserveWithHistory(value => PlaybackSpeed = value,
-                clipGenerator.m_playbackSpeed, history);
             this.WhenAnyValue(x => x.Mode).ObserveWithHistory(value => Mode = value,
                 clipGenerator.m_mode, history);
             this.WhenAnyValue(x => x.ContinueMotionAtEnd).ObserveWithHistory(value => ContinueMotionAtEnd = value,
@@ -71,6 +77,8 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
 
     public IReadOnlyList<CustomManualSelectorGenerator> Parents => _parents;
 
+    [Reactive] public IReadOnlyCollection<ViewModelBase> Properties { get; set; }
+
     public string Name
     {
         get => _clipGenerator.m_name ?? "";
@@ -88,48 +96,6 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
     {
         get => _clipGenerator.m_animationInternalId;
         set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_animationInternalId, value);
-    }
-
-    public float StartTime
-    {
-        get => _clipGenerator.m_startTime;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_startTime, value);
-    }
-
-    public float CropStart
-    {
-        get => _clipGenerator.m_cropStartAmountLocalTime;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_cropStartAmountLocalTime, value);
-    }
-
-    public float CropEnd
-    {
-        get => _clipGenerator.m_cropEndAmountLocalTime;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_cropEndAmountLocalTime, value);
-    }
-
-    public float EnforcedDuration
-    {
-        get => _clipGenerator.m_enforcedDuration;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_enforcedDuration, value);
-    }
-
-    public float UserControlledTimeFraction
-    {
-        get => _clipGenerator.m_userControlledTimeFraction;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_userControlledTimeFraction, value);
-    }
-
-    public uint UserPartitionMask
-    {
-        get => _clipGenerator.m_userPartitionMask;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_userPartitionMask, value);
-    }
-
-    public float PlaybackSpeed
-    {
-        get => _clipGenerator.m_playbackSpeed;
-        set => this.RaiseAndSetIfChanged(ref _clipGenerator.m_playbackSpeed, value);
     }
 
     public hkbClipGenerator.PlaybackMode Mode
@@ -276,7 +242,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
     public ClipGeneratorViewModel Duplicate()
     {
         hkbClipGenerator copy = DuplicateInternal();
-        return new ClipGeneratorViewModel(copy, new List<CustomManualSelectorGenerator>(), _history);
+        return new ClipGeneratorViewModel(_behaviorGraph, copy, new List<CustomManualSelectorGenerator>(), _history);
     }
 
 

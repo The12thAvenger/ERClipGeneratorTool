@@ -12,6 +12,8 @@
         <entry key="ERClipGeneratorTool/Views/ClipGeneratorView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/MainWindow.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
         <entry key="ERClipGeneratorTool/Views/ProgressBarView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/PropertyView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
+        <entry key="ERClipGeneratorTool/Views/VariableSelectorView.axaml" value="ERClipGeneratorTool/ERClipGeneratorTool.csproj" />
       </map>
     </option>
   </component>

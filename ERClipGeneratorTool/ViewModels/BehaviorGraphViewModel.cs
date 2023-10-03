@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -21,6 +22,7 @@ namespace ERClipGeneratorTool.ViewModels;
 
 public class BehaviorGraphViewModel : ViewModelBase
 {
+    private readonly hkbBehaviorGraph _behaviorGraph;
     private readonly Dictionary<int, List<CustomManualSelectorGenerator>> _cmsgsByAnimId;
     private readonly IHistory _history;
     private short _nextAnimationInternalId;
@@ -31,6 +33,10 @@ public class BehaviorGraphViewModel : ViewModelBase
         _history = history;
         FileSource = fileSource;
         RootLevelContainer = rootLevelContainer;
+        _behaviorGraph =
+            (hkbBehaviorGraph?)rootLevelContainer.m_namedVariants.FirstOrDefault(x => x.m_variant is hkbBehaviorGraph)
+                ?.m_variant ??
+            throw new InvalidDataException("The provided havok file contains no behavior graph");
 
         List<CustomManualSelectorGenerator> cmsgs = objects
             .Where(x => x is CustomManualSelectorGenerator cmsg
@@ -59,7 +65,8 @@ public class BehaviorGraphViewModel : ViewModelBase
         }
 
         ClipGenerators = new SourceCache<ClipGeneratorViewModel, string>(x => x.Name);
-        ClipGenerators.AddOrUpdate(clipParents.Select(x => new ClipGeneratorViewModel(x.Key, x.Value, _history)));
+        ClipGenerators.AddOrUpdate(clipParents.Select(x =>
+            new ClipGeneratorViewModel(_behaviorGraph, x.Key, x.Value, _history)));
 
 
         _nextAnimationInternalId = ClipGenerators.Items.Select(x => x.AnimationInternalId).Max();
@@ -69,12 +76,12 @@ public class BehaviorGraphViewModel : ViewModelBase
 
         IObservable<Func<ClipGeneratorViewModel, bool>> generatorsFilter = this.WhenAnyValue(x => x.Filter)
             .Throttle(TimeSpan.FromMilliseconds(100))
-            .Select(x => (Func<ClipGeneratorViewModel, bool>)(y => y.AnimationName.StartsWith(x)));
+            .Select(x => (Func<ClipGeneratorViewModel, bool>)(y => y.AnimationName.Contains(x)));
 
         FilteredGenerators = new ObservableCollectionExtended<ClipGeneratorViewModel>();
         ClipGenerators.Connect()
             .Filter(generatorsFilter)
-            .SortBy(x => x.Name)
+            .SortBy(x => (x.AnimationName, x.Name))
             .Bind(FilteredGenerators)
             .Subscribe();
 
@@ -211,7 +218,8 @@ public class BehaviorGraphViewModel : ViewModelBase
     {
         short nextAnimationInternalId = _nextAnimationInternalId;
         clipGenerator.m_animationInternalId = nextAnimationInternalId;
-        ClipGeneratorViewModel viewModel = new(clipGenerator, new List<CustomManualSelectorGenerator>(), _history);
+        ClipGeneratorViewModel viewModel = new(_behaviorGraph, clipGenerator, new List<CustomManualSelectorGenerator>(),
+            _history);
         _history.Snapshot(Undo, Redo);
         Redo();
 
