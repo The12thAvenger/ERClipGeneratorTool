@@ -77,8 +77,8 @@ public class PropertyViewModel<T> : ViewModelBase, IActivatableViewModel
     [Reactive] private int VariableIndex { get; set; }
     [ObservableAsProperty] public string? VariableName { get; }
 
-    public ReactiveCommand<bool, Unit> UpdateBindingCommand { get; private set; }
-    public ReactiveCommand<Unit, Unit> ChangeVariableIndexCommand { get; private set; }
+    public ReactiveCommand<bool, Unit> UpdateBindingCommand { get; private set; } = null!;
+    public ReactiveCommand<Unit, Unit> ChangeVariableIndexCommand { get; private set; } = null!;
 
     public Interaction<VariableSelectorViewModel, int> GetBindingVariableIndex { get; } = new();
 

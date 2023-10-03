@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.ReactiveUI;
 using Avalonia.VisualTree;
 using ERClipGeneratorTool.Controls;
 using ERClipGeneratorTool.ViewModels;
-using ReactiveHistory;
 using ReactiveUI;
 using ObservableExtensions = Reactive.Bindings.TinyLinq.ObservableExtensions;
 
@@ -31,6 +26,8 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
         this.WhenActivated(d =>
         {
             ViewModel!.GetBindingVariableIndex.RegisterHandler(GetBindingVariableIndex).DisposeWith(d);
+
+            _name.Text = ViewModel.Name;
 
             _value.Text = ViewModel!.Value!.ToString();
             this.Bind(ViewModel,
@@ -57,7 +54,6 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
             this.WhenAnyValue(x => x.ViewModel!.IsBound).BindTo(_changeVariable, x => x.IsVisible).DisposeWith(d);
             this.WhenAnyValue(x => x.ViewModel!.VariableName).BindTo((TextBlock)_changeVariable.Content!, x => x.Text)
                 .DisposeWith(d);
-            this.WhenAnyValue(x => x.ViewModel!.Name).BindTo(_name, x => x.Text).DisposeWith(d);
         });
     }
 
@@ -83,7 +79,8 @@ public class PropertyView<T> : ReactiveUserControl<PropertyViewModel<T>>
         _name.VerticalAlignment = VerticalAlignment.Center;
         _bindingState.ItemsSource = BindingState.Values;
         _changeVariable.Content = new TextBlock();
-        _changeVariable.BorderThickness = new Thickness(0.1);
+        _changeVariable[!BackgroundProperty] = new DynamicResourceExtension("ThemeBackgroundBrush");
+
         Grid grid = new()
         {
             ColumnDefinitions = new ColumnDefinitions("5*, 3*, 2*"),

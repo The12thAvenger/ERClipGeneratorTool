@@ -30,25 +30,26 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
         _history = history;
         _parents = parents;
         Activator = new ViewModelActivator();
-        Properties = new List<ViewModelBase>
-        {
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_playbackSpeed, "playbackSpeed",
-                history),
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_startTime, "startTime",
-                history),
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropStartAmountLocalTime,
-                "cropStartAmountLocalTime", history),
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropEndAmountLocalTime,
-                "cropEndAmountLocalTime", history),
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_enforcedDuration,
-                "enforcedDuration", history),
-            new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_userControlledTimeFraction,
-                "userControlledTimeFraction", history),
-            new PropertyViewModel<uint>(behaviorGraph, clipGenerator, x => ref x.m_userPartitionMask,
-                "userPartitionMask", history)
-        };
         this.WhenActivated(d =>
         {
+            Properties ??= new List<ViewModelBase>
+            {
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_playbackSpeed, "playbackSpeed",
+                    history),
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_startTime, "startTime",
+                    history),
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropStartAmountLocalTime,
+                    "cropStartAmountLocalTime", history),
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_cropEndAmountLocalTime,
+                    "cropEndAmountLocalTime", history),
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_enforcedDuration,
+                    "enforcedDuration", history),
+                new PropertyViewModel<float>(behaviorGraph, clipGenerator, x => ref x.m_userControlledTimeFraction,
+                    "userControlledTimeFraction", history),
+                new PropertyViewModel<uint>(behaviorGraph, clipGenerator, x => ref x.m_userPartitionMask,
+                    "userPartitionMask", history)
+            };
+
             DeleteCommand = ReactiveCommand.Create(Delete).DisposeWith(d);
             this.WhenAnyValue(x => x.Name)
                 .ObserveWithHistory(value => Name = value ?? "", clipGenerator.m_name, history);
@@ -77,7 +78,7 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
 
     public IReadOnlyList<CustomManualSelectorGenerator> Parents => _parents;
 
-    [Reactive] public IReadOnlyCollection<ViewModelBase> Properties { get; set; }
+    [Reactive] public IReadOnlyCollection<ViewModelBase>? Properties { get; set; }
 
     public string Name
     {
