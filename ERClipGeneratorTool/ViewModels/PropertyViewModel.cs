@@ -49,13 +49,13 @@ public class PropertyViewModel<T> : ViewModelBase, IActivatableViewModel
             ChangeVariableIndexCommand = ReactiveCommand.CreateFromTask(ChangeVariableIndexAsync).DisposeWith(d);
 
             this.WhenAnyValue(x => x.Value).ObserveWithHistory(value => Value = value,
-                _fieldSelector(_clipGenerator), history);
+                _fieldSelector(_clipGenerator), history).DisposeWith(d);
             this.WhenAnyValue(x => x.VariableIndex).Select(x => x < 0 ? "None" : variableNames[x])
                 .ToPropertyEx(this, x => x.VariableName,
-                    VariableIndex < 0 ? "None" : variableNames[VariableIndex]);
+                    VariableIndex < 0 ? "None" : variableNames[VariableIndex]).DisposeWith(d);
 
             // skip update for initial value
-            this.WhenAnyValue(x => x.IsBound).Skip(1).InvokeCommand(UpdateBindingCommand);
+            this.WhenAnyValue(x => x.IsBound).Skip(1).InvokeCommand(UpdateBindingCommand).DisposeWith(d);
         });
     }
 
@@ -163,7 +163,7 @@ public class PropertyViewModel<T> : ViewModelBase, IActivatableViewModel
     {
         VariableIndex = variableIndex;
         IsBound = true;
-        _clipGenerator.m_variableBindingSet ??= new hkbVariableBindingSet();
+        _clipGenerator.m_variableBindingSet ??= new hkbVariableBindingSet { m_indexOfBindingToEnable = -1 };
         if (_clipGenerator.m_variableBindingSet.m_bindings.Find(x => x.m_memberPath == _fieldName) is { } binding)
         {
             binding.m_variableIndex = variableIndex;

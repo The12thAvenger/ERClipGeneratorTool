@@ -52,27 +52,29 @@ public partial class ClipGeneratorViewModel : ViewModelBase, IActivatableViewMod
 
             DeleteCommand = ReactiveCommand.Create(Delete).DisposeWith(d);
             this.WhenAnyValue(x => x.Name)
-                .ObserveWithHistory(value => Name = value ?? "", clipGenerator.m_name, history);
+                .ObserveWithHistory(value => Name = value ?? "", clipGenerator.m_name, history).DisposeWith(d);
             this.WhenAnyValue(x => x.AnimationName).ObserveWithHistory(value => AnimationName = value ?? "",
-                clipGenerator.m_animationName, history);
+                clipGenerator.m_animationName, history).DisposeWith(d);
             this.WhenAnyValue(x => x.AnimationInternalId).ObserveWithHistory(value => AnimationInternalId = value,
-                clipGenerator.m_animationInternalId, history);
+                clipGenerator.m_animationInternalId, history).DisposeWith(d);
             this.WhenAnyValue(x => x.Mode).ObserveWithHistory(value => Mode = value,
-                clipGenerator.m_mode, history);
+                clipGenerator.m_mode, history).DisposeWith(d);
             this.WhenAnyValue(x => x.ContinueMotionAtEnd).ObserveWithHistory(value => ContinueMotionAtEnd = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_CONTINUE_MOTION_AT_END), history);
+                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_CONTINUE_MOTION_AT_END), history).DisposeWith(d);
             this.WhenAnyValue(x => x.SyncHalfCycleInPingPongMode).ObserveWithHistory(
-                value => SyncHalfCycleInPingPongMode = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_SYNC_HALF_CYCLE_IN_PING_PONG_MODE), history);
+                    value => SyncHalfCycleInPingPongMode = value,
+                    Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_SYNC_HALF_CYCLE_IN_PING_PONG_MODE), history)
+                .DisposeWith(d);
             this.WhenAnyValue(x => x.Mirror).ObserveWithHistory(value => Mirror = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_MIRROR), history);
+                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_MIRROR), history).DisposeWith(d);
             this.WhenAnyValue(x => x.ForceDensePose).ObserveWithHistory(value => ForceDensePose = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_FORCE_DENSE_POSE), history);
+                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_FORCE_DENSE_POSE), history).DisposeWith(d);
             this.WhenAnyValue(x => x.DontConvertAnnotationsToTriggers).ObserveWithHistory(
-                value => DontConvertAnnotationsToTriggers = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_DONT_CONVERT_ANNOTATIONS_TO_TRIGGERS), history);
+                    value => DontConvertAnnotationsToTriggers = value,
+                    Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_DONT_CONVERT_ANNOTATIONS_TO_TRIGGERS), history)
+                .DisposeWith(d);
             this.WhenAnyValue(x => x.IgnoreMotion).ObserveWithHistory(value => IgnoreMotion = value,
-                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_IGNORE_MOTION), history);
+                Flags.HasFlag(hkbClipGenerator.ClipFlags.FLAG_IGNORE_MOTION), history).DisposeWith(d);
         });
     }
 

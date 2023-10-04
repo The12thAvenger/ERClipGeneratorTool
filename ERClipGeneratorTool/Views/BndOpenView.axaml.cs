@@ -3,6 +3,7 @@ using Avalonia.ReactiveUI;
 using ERClipGeneratorTool.ViewModels;
 using ReactiveUI;
 using System;
+using System.Reactive.Disposables;
 
 namespace ERClipGeneratorTool.Views;
 
@@ -14,8 +15,8 @@ public partial class BndOpenView : ReactiveWindow<BndOpenViewModel>
 
         this.WhenActivated(d =>
         {
-            d(ViewModel!.ConfirmCommand.Subscribe(x => Close(x!)));
-            d(ViewModel!.CancelCommand.Subscribe(x => Close(x!)));
+            ViewModel!.ConfirmCommand.Subscribe(x => Close(x!)).DisposeWith(d);
+            ViewModel!.CancelCommand.Subscribe(x => Close(x!)).DisposeWith(d);
         });
 #if DEBUG
         this.AttachDevTools();

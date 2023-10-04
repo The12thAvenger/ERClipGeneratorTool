@@ -3,6 +3,7 @@ using Avalonia.ReactiveUI;
 using ERClipGeneratorTool.ViewModels;
 using ReactiveUI;
 using System;
+using System.Reactive.Disposables;
 
 namespace ERClipGeneratorTool.Views;
 
@@ -13,14 +14,14 @@ public partial class VariableSelectorView : ReactiveWindow<VariableSelectorViewM
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            this.Closing += (s, e) =>
+            Closing += (_, e) =>
             {
                 if (e.IsProgrammatic) return;
                 e.Cancel = true;
                 Close(-1);
             };
-            d(ViewModel!.ConfirmCommand.Subscribe(x => Close(x)));
-            d(ViewModel!.CancelCommand.Subscribe(x => Close(x)));
+            ViewModel!.ConfirmCommand.Subscribe(x => Close(x)).DisposeWith(d);
+            ViewModel!.CancelCommand.Subscribe(x => Close(x)).DisposeWith(d);
         });
 #if DEBUG
         this.AttachDevTools();
