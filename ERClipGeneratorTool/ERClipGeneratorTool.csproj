@@ -10,9 +10,9 @@
         <ApplicationIcon>Assets\hbt.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\" />
-        <AvaloniaResource Include="Assets\**" />
-        <None Remove=".gitignore" />
+        <Folder Include="Models\"/>
+        <AvaloniaResource Include="Assets\**"/>
+        <None Remove=".gitignore"/>
         <None Update="Settings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -21,29 +21,25 @@
         <!--This helps with theme dll-s trimming.
         If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
         https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-        <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-        <TrimmableAssembly Include="Avalonia.Themes.Default" />
+        <TrimmableAssembly Include="Avalonia.Themes.Fluent"/>
+        <TrimmableAssembly Include="Avalonia.Themes.Default"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.4" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+        <PackageReference Include="Avalonia" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.4"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
-        <PackageReference Include="MessageBox.Avalonia" Version="3.1.4" />
-        <PackageReference Include="ReactiveHistory" Version="0.10.7" />
-        <PackageReference Include="ReactiveProperty" Version="9.3.2" />
-        <PackageReference Include="ReactiveUI.Fody" Version="19.5.1" />
-        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.1.23419.4" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4"/>
+        <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.4"/>
+        <PackageReference Include="MessageBox.Avalonia" Version="3.1.4"/>
+        <PackageReference Include="ReactiveHistory" Version="0.10.7"/>
+        <PackageReference Include="ReactiveProperty" Version="9.3.2"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="19.5.1"/>
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.1.23419.4"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\HKLib\HKLib.Serialization\HKLib.Serialization.csproj" />
-        <ProjectReference Include="..\SoulsFormats\SoulsFormats\SoulsFormats.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Avalonia.Themes.Simple">
-            <HintPath>..\..\..\.nuget\packages\avalonia.themes.simple\11.0.0-preview5\lib\net6.0\Avalonia.Themes.Simple.dll</HintPath>
-        </Reference>
+        <ProjectReference Include="..\HKLib\HKLib.Serialization\HKLib.Serialization.csproj"/>
+        <ProjectReference Include="..\SoulsFormats\SoulsFormats\SoulsFormats.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Views\AnibndImportView.axaml.cs">
